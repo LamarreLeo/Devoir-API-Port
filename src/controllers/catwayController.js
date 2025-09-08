@@ -23,4 +23,15 @@ const createCatway = async (req, res) => {
     }
 };
 
-module.exports = { createCatway };
+const getAllCatways = async (req, res) => {
+    try {
+        const catwaysData = await catwayService.getAllCatways();
+        return res.status(200).json(catwaysData);
+    } catch (err) {
+        return res
+            .status(500)
+            .json({ message: "Erreur lors de la récupération des catways" });
+    }
+};
+
+module.exports = { createCatway, getAllCatways };
