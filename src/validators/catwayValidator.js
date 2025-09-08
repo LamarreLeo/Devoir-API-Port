@@ -1,5 +1,22 @@
+/**
+ * Validateurs pour les opérations de création de Catway.
+ * @module validators/catwayValidator
+ * @requires express-validator
+ */
+
 const { body } = require("express-validator");
 
+/**
+ * Validateur pour la création d'un Catway.
+ * Vérifie que le numéro, le type et l'état du catway respectent les règles définies.
+ * @type {Array<ValidationChain>}
+ * @example
+ * // Utilisation dans une route Express
+ * const { createCatwayValidator } = require('./validators/catwayValidator');
+ * app.post('/catway', createCatwayValidator, (req, res) => {
+ *   // Gérer la requête après validation
+ * });
+ */
 const createCatwayValidator = [
     body("catwayNumber")
         .notEmpty()
@@ -21,3 +38,5 @@ const createCatwayValidator = [
         .withMessage("L'état du catway ne peut pas dépasser 500 caractères")
         .trim(),
 ];
+
+module.exports = { createCatwayValidator };
