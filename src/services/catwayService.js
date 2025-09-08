@@ -4,4 +4,8 @@ const createCatway = async (catwayData) => {
     return await Catway.create(catwayData);
 };
 
-module.exports = { createCatway };
+const getAllCatways = async () => {
+    return await Catway.find();
+};
+
+module.exports = { createCatway, getAllCatways };
