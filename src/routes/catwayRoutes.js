@@ -4,5 +4,5 @@ const catwayController = require("../controllers/catwayController");
 const { createCatwayValidator } = require("../validators/catwayValidator");
 
 router.post("/catways", createCatwayValidator, catwayController.createCatway);
-
+router.get("/catways", catwayController.getAllCatways);
 module.exports = router;
