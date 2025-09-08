@@ -1,5 +1,22 @@
+/**
+ * Validateurs pour les opérations de création de réservation.
+ * @module validators/reservationValidator
+ * @requires express-validator
+ */
+
 const { body } = require("express-validator");
 
+/**
+ * Validateur pour la création d'une réservation.
+ * Vérifie que le numéro du catway, le nom du client, le nom du bateau, et les dates respectent les règles définies.
+ * @type {Array<ValidationChain>}
+ * @example
+ * // Utilisation dans une route Express
+ * const { createReservationValidator } = require('./validators/reservationValidator');
+ * app.post('/reservation', createReservationValidator, (req, res) => {
+ *   // Gérer la requête après validation
+ * });
+ */
 const createReservationValidator = [
     body("catwayNumber")
         .notEmpty()
