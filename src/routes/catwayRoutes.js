@@ -19,4 +19,9 @@ router.put(
     catwayValidator.updateCatwayStateValidator,
     catwayController.updateCatwayState
 );
+router.delete(
+    "/:id",
+    catwayValidator.getCatwayByIdValidator,
+    catwayController.deleteCatway
+);
 module.exports = router;
