@@ -12,4 +12,17 @@ const getCatwayById = async (catwayNumber) => {
     return await Catway.findOne({ catwayNumber });
 };
 
-module.exports = { createCatway, getAllCatways, getCatwayById };
+const updateCatwayState = async (catwayNumber, newState) => {
+    return await Catway.findOneAndUpdate(
+        { catwayNumber },
+        { catwayState: newState },
+        { new: true }
+    );
+};
+
+module.exports = {
+    createCatway,
+    getAllCatways,
+    getCatwayById,
+    updateCatwayState,
+};
