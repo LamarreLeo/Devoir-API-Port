@@ -15,7 +15,7 @@ router.get(
     catwayController.getCatwayById
 );
 router.put(
-    "/:id/state",
+    "/:id",
     catwayValidator.updateCatwayStateValidator,
     catwayController.updateCatwayState
 );
