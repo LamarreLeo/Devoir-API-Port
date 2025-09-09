@@ -29,4 +29,5 @@ module.exports = {
     getAllCatways,
     getCatwayById,
     updateCatwayState,
+    deleteCatway,
 };
