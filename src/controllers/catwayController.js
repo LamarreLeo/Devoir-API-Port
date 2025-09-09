@@ -34,4 +34,25 @@ const getAllCatways = async (req, res) => {
     }
 };
 
-module.exports = { createCatway, getAllCatways };
+const getCatwayById = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const catwayNumber = Number(req.params.id);
+        const catwayData = await catwayService.getCatwayById(catwayNumber);
+        if (!catwayData) {
+            return res.status(404).json({ message: "Catway non trouvé" });
+        }
+
+        return res.status(200).json(catwayData);
+    } catch (err) {
+        return res
+            .status(500)
+            .json({ message: "Erreur lors de la récupération du catway" });
+    }
+};
+
+module.exports = { createCatway, getAllCatways, getCatwayById };
