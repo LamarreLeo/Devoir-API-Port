@@ -20,6 +20,10 @@ const updateCatwayState = async (catwayNumber, newState) => {
     );
 };
 
+const deleteCatway = async (catwayNumber) => {
+    return await Catway.findOneAndDelete({ catwayNumber });
+};
+
 module.exports = {
     createCatway,
     getAllCatways,
