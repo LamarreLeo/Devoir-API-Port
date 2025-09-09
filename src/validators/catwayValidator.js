@@ -4,7 +4,7 @@
  * @requires express-validator
  */
 
-const { body } = require("express-validator");
+const { body, param } = require("express-validator");
 
 /**
  * Validateur pour la création d'un Catway.
@@ -39,4 +39,12 @@ const createCatwayValidator = [
         .trim(),
 ];
 
-module.exports = { createCatwayValidator };
+const getCatwayByIdValidator = [
+    param("id")
+        .notEmpty()
+        .withMessage("Le numéro du catway est requis")
+        .isInt({ min: 1 })
+        .withMessage("Le numéro du catway doit être un entier positif"),
+];
+
+module.exports = { createCatwayValidator, getCatwayByIdValidator };
