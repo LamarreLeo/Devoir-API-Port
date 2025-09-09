@@ -8,4 +8,8 @@ const getAllCatways = async () => {
     return await Catway.find();
 };
 
-module.exports = { createCatway, getAllCatways };
+const getCatwayById = async (catwayNumber) => {
+    return await Catway.findOne({ catwayNumber });
+};
+
+module.exports = { createCatway, getAllCatways, getCatwayById };
