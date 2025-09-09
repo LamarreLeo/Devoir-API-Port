@@ -47,4 +47,23 @@ const getCatwayByIdValidator = [
         .withMessage("Le numéro du catway doit être un entier positif"),
 ];
 
-module.exports = { createCatwayValidator, getCatwayByIdValidator };
+const updateCatwayStateValidator = [
+    param("id")
+        .notEmpty()
+        .withMessage("Le numéro du catway est requis")
+        .isInt({ min: 1 })
+        .withMessage("Le numéro du catway doit être un entier positif"),
+
+    body("catwayState")
+        .notEmpty()
+        .withMessage("L'état du catway est requis")
+        .isLength({ max: 500 })
+        .withMessage("L'état du catway ne peut pas dépasser 500 caractères")
+        .trim(),
+];
+
+module.exports = {
+    createCatwayValidator,
+    getCatwayByIdValidator,
+    updateCatwayStateValidator,
+};
