@@ -1,6 +1,11 @@
 const { validationResult } = require("express-validator");
 const catwayService = require("../services/catwayService");
 
+/**
+ * Contrôleur pour la création d'un catway.
+ * @param {Object} req - La requête Express.
+ * @param {Object} res - La réponse Express.
+ */
 const createCatway = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -23,6 +28,11 @@ const createCatway = async (req, res) => {
     }
 };
 
+/**
+ * Contrôleur pour récupérer tous les catways.
+ * @param {Object} req - La requête Express.
+ * @param {Object} res - La réponse Express.
+ */
 const getAllCatways = async (req, res) => {
     try {
         const catwaysData = await catwayService.getAllCatways();
@@ -34,6 +44,11 @@ const getAllCatways = async (req, res) => {
     }
 };
 
+/**
+ * Contrôleur pour récupérer un catway par ID.
+ * @param {Object} req - La requête Express.
+ * @param {Object} res - La réponse Express.
+ */
 const getCatwayById = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -55,6 +70,11 @@ const getCatwayById = async (req, res) => {
     }
 };
 
+/**
+ * Contrôleur pour mettre à jour l'état d'un catway.
+ * @param {Object} req - La requête Express.
+ * @param {Object} res - La réponse Express.
+ */
 const updateCatwayState = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -82,6 +102,11 @@ const updateCatwayState = async (req, res) => {
     }
 };
 
+/**
+ * Contrôleur pour supprimer un catway.
+ * @param {Object} req - La requête Express.
+ * @param {Object} res - La réponse Express.
+ */
 const deleteCatway = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

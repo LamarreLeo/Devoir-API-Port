@@ -39,6 +39,11 @@ const createCatwayValidator = [
         .trim(),
 ];
 
+/**
+ * Validateur pour la récupération d'un Catway par ID.
+ * Vérifie que l'ID est un entier positif.
+ * @type {Array<ValidationChain>}
+ */
 const getCatwayByIdValidator = [
     param("id")
         .notEmpty()
@@ -47,6 +52,11 @@ const getCatwayByIdValidator = [
         .withMessage("Le numéro du catway doit être un entier positif"),
 ];
 
+/**
+ * Validateur pour la mise à jour de l'état d'un Catway.
+ * Vérifie que l'ID est un entier positif et que l'état du catway respecte les règles définies.
+ * @type {Array<ValidationChain>}
+ */
 const updateCatwayStateValidator = [
     param("id")
         .notEmpty()
