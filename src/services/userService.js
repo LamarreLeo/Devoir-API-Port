@@ -22,3 +22,7 @@ const createUser = async (userData) => {
 
     return userOBJ;
 };
+
+module.exports = {
+    createUser,
+};

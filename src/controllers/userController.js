@@ -12,6 +12,7 @@ const createUser = async (req, res) => {
         const newUser = await userService.createUser(userData);
         return res.status(201).json(newUser);
     } catch (err) {
+        console.error(err);
         if (err.statusCode === 409) {
             return res.status(409).json({ message: err.message });
         }
