@@ -48,7 +48,7 @@ const registerValidator = [
         .withMessage(
             "Le mot de passe doit contenir au moins une lettre majuscule"
         )
-        .matches(/\W/)
+        .matches(/[^A-Za-z0-9]/)
         .withMessage(
             "Le mot de passe doit contenir au moins un caractère spécial"
         ),
