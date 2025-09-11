@@ -4,7 +4,7 @@
  * @requires express-validator
  */
 
-const { body } = require("express-validator");
+const { body, param } = require("express-validator");
 
 /**
  * Validateur pour l'enregistrement d'un utilisateur.
@@ -54,6 +54,15 @@ const registerValidator = [
         ),
 ];
 
+const getUserByEmailValidator = [
+    param("email")
+        .notEmpty()
+        .withMessage("L'email est requis")
+        .isEmail()
+        .withMessage("L'email n'est pas valide")
+        .normalizeEmail(),
+];
+
 /**
  * Validateur pour la connexion d'un utilisateur.
  * Vérifie que l'email et le mot de passe sont fournis.
@@ -76,4 +85,4 @@ const loginValidator = [
     body("password").notEmpty().withMessage("Le mot de passe est requis"),
 ];
 
-module.exports = { registerValidator, loginValidator };
+module.exports = { registerValidator, loginValidator, getUserByEmailValidator };
