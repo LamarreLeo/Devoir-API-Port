@@ -28,15 +28,36 @@ const getAllUsers = async (req, res) => {
         return res.status(200).json(userData);
     } catch (err) {
         console.error(err);
-        return res
-            .status(500)
-            .json({
-                message: "Erreur lors de la récupération des utilisateurs",
-            });
+        return res.status(500).json({
+            message: "Erreur lors de la récupération des utilisateurs",
+        });
+    }
+};
+
+const getUserByEmail = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const email = req.params.email;
+        const userData = await userService.getUserByEmail(email);
+        if (!userData) {
+            return res.status(404).json({ message: "Utilisateur non trouvé" });
+        }
+
+        return res.status(200).json(userData);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            message: "Erreur lors de la récupération de l'utilisateur",
+        });
     }
 };
 
 module.exports = {
     createUser,
     getAllUsers,
+    getUserByEmail,
 };
