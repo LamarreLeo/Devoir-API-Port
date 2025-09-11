@@ -27,7 +27,12 @@ const getAllUsers = async () => {
     return await User.find().select("-password");
 }
 
+const getUserByEmail = async (email) => {
+    return await User.findOne({ email }).select("-password");
+}
+
 module.exports = {
     createUser,
     getAllUsers,
+    getUserByEmail,
 };
