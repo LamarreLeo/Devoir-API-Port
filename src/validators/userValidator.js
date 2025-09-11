@@ -4,7 +4,7 @@
  * @requires express-validator
  */
 
-const { body } = require("express-validator");
+const { body, param } = require("express-validator");
 
 /**
  * Validateur pour l'enregistrement d'un utilisateur.
