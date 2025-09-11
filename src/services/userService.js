@@ -23,6 +23,11 @@ const createUser = async (userData) => {
     return userOBJ;
 };
 
+const getAllUsers = async () => {
+    return await User.find().select("-password");
+}
+
 module.exports = {
     createUser,
+    getAllUsers,
 };
