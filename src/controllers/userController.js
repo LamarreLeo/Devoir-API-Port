@@ -56,8 +56,32 @@ const getUserByEmail = async (req, res) => {
     }
 };
 
+const updateUser = async (req, res) => {
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+        return res.status(400).json({ errors: error.array() });
+    }
+
+    try {
+        const email = req.params.email;
+        const updateData = req.body;
+        const updatedUser = await userService.updateUser(email, updateData);
+        return res.status(200).json(updatedUser);
+    } catch (err) {
+        if (err.statusCode === 404) {
+            return res.status(404).json({ message: err.message });
+        } else if (err.statusCode === 409) {
+            return res.status(409).json({ message: err.message });
+        }
+        return res.status(500).json({
+            message: "Erreur lors de la mise à jour de l'utilisateur",
+        });
+    }
+};
+
 module.exports = {
     createUser,
     getAllUsers,
     getUserByEmail,
+    updateUser,
 };
