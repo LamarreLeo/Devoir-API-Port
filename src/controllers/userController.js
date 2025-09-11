@@ -22,6 +22,21 @@ const createUser = async (req, res) => {
     }
 };
 
+const getAllUsers = async (req, res) => {
+    try {
+        const userData = await userService.getAllUsers();
+        return res.status(200).json(userData);
+    } catch (err) {
+        console.error(err);
+        return res
+            .status(500)
+            .json({
+                message: "Erreur lors de la récupération des utilisateurs",
+            });
+    }
+};
+
 module.exports = {
     createUser,
+    getAllUsers,
 };
