@@ -10,5 +10,10 @@ router.get(
     userValidator.getUserByEmailValidator,
     userController.getUserByEmail
 );
+router.put(
+    "/:email",
+    userValidator.updateUserValidator,
+    userController.updateUser
+);
 
 module.exports = router;

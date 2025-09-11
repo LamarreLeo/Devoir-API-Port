@@ -63,6 +63,40 @@ const getUserByEmailValidator = [
         .normalizeEmail(),
 ];
 
+const updateUserValidator = [
+    body("username")
+        .optional()
+        .isLength({ min: 3, max: 20 })
+        .withMessage(
+            "Le nom d'utilisateur doit contenir entre 3 et 20 caractères"
+        ),
+
+    body("email")
+        .optional()
+        .isEmail()
+        .withMessage("L'email n'est pas valide")
+        .normalizeEmail(),
+
+    body("password")
+        .optional()
+        .isLength({ min: 8 })
+        .withMessage("Le mot de passe doit contenir au moins 8 caractères")
+        .matches(/[0-9]/)
+        .withMessage("Le mot de passe doit contenir au moins un chiffre")
+        .matches(/[a-z]/)
+        .withMessage(
+            "Le mot de passe doit contenir au moins une lettre minuscule"
+        )
+        .matches(/[A-Z]/)
+        .withMessage(
+            "Le mot de passe doit contenir au moins une lettre majuscule"
+        )
+        .matches(/[^A-Za-z0-9]/)
+        .withMessage(
+            "Le mot de passe doit contenir au moins un caractère spécial"
+        ),
+];
+
 /**
  * Validateur pour la connexion d'un utilisateur.
  * Vérifie que l'email et le mot de passe sont fournis.
@@ -85,4 +119,9 @@ const loginValidator = [
     body("password").notEmpty().withMessage("Le mot de passe est requis"),
 ];
 
-module.exports = { registerValidator, loginValidator, getUserByEmailValidator };
+module.exports = {
+    registerValidator,
+    loginValidator,
+    getUserByEmailValidator,
+    updateUserValidator,
+};
