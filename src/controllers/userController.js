@@ -79,9 +79,32 @@ const updateUser = async (req, res) => {
     }
 };
 
+const deleteUser = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const email = req.params.email;
+        const deletedUser = await userService.deleteUser(email);
+        if (!deletedUser) {
+            return res.status(404).json({ message: "Utilisateur non trouvé" });
+        }
+
+        return res.status(200).json(deletedUser);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            message: "Erreur lors de la suppression de l'utilisateur",
+        });
+    }
+};
+
 module.exports = {
     createUser,
     getAllUsers,
     getUserByEmail,
     updateUser,
+    deleteUser,
 };

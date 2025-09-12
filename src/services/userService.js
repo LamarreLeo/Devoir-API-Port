@@ -78,9 +78,18 @@ const updateUser = async (email, updateData) => {
     return userOBJ;
 };
 
+const deleteUser = async (email) => {
+    const deletedUser = await User.findOneAndDelete({ email }).lean();
+    if (!deletedUser) return null;
+
+    delete deletedUser.password;
+    return deletedUser;
+};
+
 module.exports = {
     createUser,
     getAllUsers,
     getUserByEmail,
     updateUser,
+    deleteUser,
 };
