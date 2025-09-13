@@ -1,6 +1,24 @@
+/**
+ * Service pour la gestion des utilisateurs.
+ * @module services/userService
+ * @requires ../models/userModel
+ * @requires ../utils/password
+ */
+
 const User = require("../models/userModel");
 const { hashPassword, comparePassword } = require("../utils/password");
 
+/**
+ * Crée un nouvel utilisateur avec les données fournies.
+ * @async
+ * @function createUser
+ * @param {Object} userData - Les données du nouvel utilisateur.
+ * @param {string} userData.username - Le nom d'utilisateur.
+ * @param {string} userData.email - L'email de l'utilisateur.
+ * @param {string} userData.password - Le mot de passe en clair.
+ * @returns {Promise<Object>} L'utilisateur créé sans le mot de passe.
+ * @throws {Error} Si l'email est déjà utilisé.
+ */
 const createUser = async (userData) => {
     const existingUser = await User.findOne({ email: userData.email });
     if (existingUser) {
@@ -23,14 +41,39 @@ const createUser = async (userData) => {
     return userOBJ;
 };
 
+/**
+ * Récupère tous les utilisateurs.
+ * @async
+ * @function getAllUsers
+ * @returns {Promise<Array<Object>>} Une liste de tous les utilisateurs sans leurs mots de passe.
+ */
 const getAllUsers = async () => {
     return await User.find().select("-password");
 };
 
+/**
+ * Récupère un utilisateur par son email.
+ * @async
+ * @function getUserByEmail
+ * @param {string} email - L'email de l'utilisateur à récupérer.
+ * @returns {Promise<Object|null>} L'utilisateur trouvé ou null si non trouvé.
+ */
 const getUserByEmail = async (email) => {
     return await User.findOne({ email }).select("-password");
 };
 
+/**
+ * Met à jour un utilisateur existant.
+ * @async
+ * @function updateUser
+ * @param {string} email - L'email de l'utilisateur à mettre à jour.
+ * @param {Object} updateData - Les données à mettre à jour.
+ * @param {string} [updateData.username] - Le nouveau nom d'utilisateur (optionnel).
+ * @param {string} [updateData.email] - Le nouvel email (optionnel).
+ * @param {string} [updateData.password] - Le nouveau mot de passe (optionnel).
+ * @returns {Promise<Object>} L'utilisateur mis à jour sans le mot de passe.
+ * @throws {Error} Si l'utilisateur n'est pas trouvé ou si le nouvel email est déjà utilisé.
+ */
 const updateUser = async (email, updateData) => {
     const user = await User.findOne({ email });
     if (!user) {
@@ -78,6 +121,13 @@ const updateUser = async (email, updateData) => {
     return userOBJ;
 };
 
+/**
+ * Supprime un utilisateur par son email.
+ * @async
+ * @function deleteUser
+ * @param {string} email - L'email de l'utilisateur à supprimer.
+ * @returns {Promise<Object|null>} L'utilisateur supprimé ou null si non trouvé.
+ */
 const deleteUser = async (email) => {
     const deletedUser = await User.findOneAndDelete({ email }).lean();
     if (!deletedUser) return null;
@@ -86,6 +136,15 @@ const deleteUser = async (email) => {
     return deletedUser;
 };
 
+/**
+ * Authentifie un utilisateur avec son email et son mot de passe.
+ * @async
+ * @function userLogin
+ * @param {string} email - L'email de l'utilisateur.
+ * @param {string} password - Le mot de passe en clair.
+ * @returns {Promise<Object>} L'utilisateur authentifié sans le mot de passe.
+ * @throws {Error} Si l'email ou le mot de passe est incorrect.
+ */
 const userLogin = async (email, password) => {
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
