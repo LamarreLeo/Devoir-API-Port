@@ -1,5 +1,6 @@
 const express = require("express");
 const connectDB = require("./config/db");
+const sessionMiddleware = require("./middlewares/session");
 const userRoutes = require("./routes/userRoutes");
 const catwayRoutes = require("./routes/catwayRoutes");
 const dotenv = require("dotenv");
@@ -10,6 +11,9 @@ const app = express();
 connectDB();
 
 app.use(express.json());
+
+sessionMiddleware(app);
+
 app.use("/api/users", userRoutes);
 app.use("/api/catways", catwayRoutes);
 
