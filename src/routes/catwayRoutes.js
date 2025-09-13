@@ -4,12 +4,16 @@
  * @requires express
  * @requires controllers/catwayController
  * @requires validators/catwayValidator
+ * @requires middlewares/authMiddleware
  */
 
 const express = require("express");
 const router = express.Router();
 const catwayController = require("../controllers/catwayController");
 const catwayValidator = require("../validators/catwayValidator");
+const authMiddleware = require("../middlewares/authMiddleware");
+
+router.use(authMiddleware);
 
 /**
  * Crée un nouveau catway.

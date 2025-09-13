@@ -1,6 +1,6 @@
 const express = require("express");
 const connectDB = require("./config/db");
-const sessionMiddleware = require("./middlewares/session");
+const sessionMiddleware = require("./middlewares/sessionMiddleware");
 const userRoutes = require("./routes/userRoutes");
 const catwayRoutes = require("./routes/catwayRoutes");
 const dotenv = require("dotenv");
