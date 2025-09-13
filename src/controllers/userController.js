@@ -126,6 +126,34 @@ const userLogin = async (req, res) => {
     }
 };
 
+const userLogout = async (req, res) => {
+    try {
+        if (req.session.user) {
+            req.session.destroy((err) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({
+                        message: "Erreur lors de la déconnexion",
+                    });
+                }
+                res.clearCookie("connect.sid");
+                return res.status(200).json({
+                    message: "Déconnexion réussie",
+                });
+            });
+        } else {
+            return res
+                .status(400)
+                .json({ message: "Utilisateur non connecté" });
+        }
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            message: "Erreur lors de la déconnexion",
+        });
+    }
+};
+
 module.exports = {
     createUser,
     getAllUsers,
@@ -133,4 +161,5 @@ module.exports = {
     updateUser,
     deleteUser,
     userLogin,
+    userLogout,
 };
