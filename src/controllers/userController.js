@@ -101,10 +101,36 @@ const deleteUser = async (req, res) => {
     }
 };
 
+const userLogin = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { email, password } = req.body;
+    try {
+        const user = await userService.userLogin(email, password);
+        req.session.user = user;
+        return res.status(200).json({
+            message: "Connexion réussie",
+            user,
+        });
+    } catch (err) {
+        if (err.message === "Email ou mot de passe incorrect") {
+            return res.status(401).json({ message: err.message });
+        }
+        console.error(err);
+        return res.status(500).json({
+            message: "Erreur lors de la connexion",
+        });
+    }
+};
+
 module.exports = {
     createUser,
     getAllUsers,
     getUserByEmail,
     updateUser,
     deleteUser,
+    userLogin,
 };

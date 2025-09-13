@@ -86,10 +86,26 @@ const deleteUser = async (email) => {
     return deletedUser;
 };
 
+const userLogin = async (email, password) => {
+    const user = await User.findOne({ email }).select("+password");
+    if (!user) {
+        throw new Error("Email ou mot de passe incorrect");
+    }
+    const isPasswordValid = await comparePassword(password, user.password);
+    if (!isPasswordValid) {
+        throw new Error("Email ou mot de passe incorrect");
+    }
+
+    const userOBJ = user.toObject();
+    delete userOBJ.password;
+    return userOBJ;
+};
+
 module.exports = {
     createUser,
     getAllUsers,
     getUserByEmail,
     updateUser,
     deleteUser,
+    userLogin,
 };
