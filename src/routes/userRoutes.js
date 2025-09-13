@@ -25,4 +25,6 @@ router.delete(
     userController.deleteUser
 );
 
+router.post("/login", userValidator.loginValidator, userController.userLogin);
+
 module.exports = router;
