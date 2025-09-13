@@ -13,6 +13,7 @@ const catwayController = require("../controllers/catwayController");
 const catwayValidator = require("../validators/catwayValidator");
 const authMiddleware = require("../middlewares/authMiddleware");
 
+// Middleware d'authentification pour les routes suivantes
 router.use(authMiddleware);
 
 /**

@@ -1,6 +1,25 @@
+/**
+ * Contrôleur pour la gestion des utilisateurs.
+ * @module controllers/userController
+ * @requires express-validator
+ * @requires ../services/userService
+ */
+
 const { validationResult } = require("express-validator");
 const userService = require("../services/userService");
 
+/**
+ * Crée un nouvel utilisateur.
+ * @async
+ * @function createUser
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.body - Le corps de la requête.
+ * @param {string} req.body.username - Le nom d'utilisateur.
+ * @param {string} req.body.email - L'email de l'utilisateur.
+ * @param {string} req.body.password - Le mot de passe en clair.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise<Object>} Réponse JSON avec l'utilisateur créé ou un message d'erreur.
+ */
 const createUser = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -22,6 +41,14 @@ const createUser = async (req, res) => {
     }
 };
 
+/**
+ * Récupère tous les utilisateurs.
+ * @async
+ * @function getAllUsers
+ * @param {Object} req - La requête Express.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise<Object>} Réponse JSON avec la liste des utilisateurs ou un message d'erreur.
+ */
 const getAllUsers = async (req, res) => {
     try {
         const userData = await userService.getAllUsers();
@@ -34,6 +61,16 @@ const getAllUsers = async (req, res) => {
     }
 };
 
+/**
+ * Récupère un utilisateur par son email.
+ * @async
+ * @function getUserByEmail
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.params - Les paramètres de la requête.
+ * @param {string} req.params.email - L'email de l'utilisateur à récupérer.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise<Object>} Réponse JSON avec l'utilisateur ou un message d'erreur.
+ */
 const getUserByEmail = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -56,6 +93,20 @@ const getUserByEmail = async (req, res) => {
     }
 };
 
+/**
+ * Met à jour un utilisateur existant.
+ * @async
+ * @function updateUser
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.params - Les paramètres de la requête.
+ * @param {string} req.params.email - L'email de l'utilisateur à mettre à jour.
+ * @param {Object} req.body - Les données à mettre à jour.
+ * @param {string} [req.body.username] - Le nouveau nom d'utilisateur (optionnel).
+ * @param {string} [req.body.email] - Le nouvel email (optionnel).
+ * @param {string} [req.body.password] - Le nouveau mot de passe (optionnel).
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise<Object>} Réponse JSON avec l'utilisateur mis à jour ou un message d'erreur.
+ */
 const updateUser = async (req, res) => {
     const error = validationResult(req);
     if (!error.isEmpty()) {
@@ -79,6 +130,16 @@ const updateUser = async (req, res) => {
     }
 };
 
+/**
+ * Supprime un utilisateur par son email.
+ * @async
+ * @function deleteUser
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.params - Les paramètres de la requête.
+ * @param {string} req.params.email - L'email de l'utilisateur à supprimer.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise<Object>} Réponse JSON avec l'utilisateur supprimé ou un message d'erreur.
+ */
 const deleteUser = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -101,6 +162,17 @@ const deleteUser = async (req, res) => {
     }
 };
 
+/**
+ * Authentifie un utilisateur.
+ * @async
+ * @function userLogin
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.body - Le corps de la requête.
+ * @param {string} req.body.email - L'email de l'utilisateur.
+ * @param {string} req.body.password - Le mot de passe en clair.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise<Object>} Réponse JSON avec l'utilisateur authentifié ou un message d'erreur.
+ */
 const userLogin = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -126,6 +198,14 @@ const userLogin = async (req, res) => {
     }
 };
 
+/**
+ * Déconnecte un utilisateur.
+ * @async
+ * @function userLogout
+ * @param {Object} req - La requête Express.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise<Object>} Réponse JSON avec un message de succès ou d'erreur.
+ */
 const userLogout = async (req, res) => {
     try {
         if (req.session.user) {

@@ -54,6 +54,17 @@ const registerValidator = [
         ),
 ];
 
+/**
+ * Validateur pour la récupération d'un utilisateur par email.
+ * Vérifie que l'email fourni est valide.
+ * @type {Array<ValidationChain>}
+ * @example
+ * // Utilisation dans une route Express
+ * const { getUserByEmailValidator } = require('./validators/userValidator');
+ * app.get('/users/email/:email', getUserByEmailValidator, (req, res) => {
+ *   // Gérer la requête après validation
+ * });
+ */
 const getUserByEmailValidator = [
     param("email")
         .notEmpty()
@@ -63,6 +74,17 @@ const getUserByEmailValidator = [
         .normalizeEmail(),
 ];
 
+/**
+ * Validateur pour la mise à jour d'un utilisateur.
+ * Tous les champs sont optionnels, mais s'ils sont fournis, ils doivent respecter les règles définies.
+ * @type {Array<ValidationChain>}
+ * @example
+ * // Utilisation dans une route Express
+ * const { updateUserValidator } = require('./validators/userValidator');
+ * app.put('/users/:id', updateUserValidator, (req, res) => {
+ *   // Gérer la requête après validation
+ * });
+ */
 const updateUserValidator = [
     body("username")
         .optional()
