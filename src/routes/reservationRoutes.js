@@ -12,4 +12,6 @@ router.post(
     reservationController.createReservation
 );
 
+router.get("/reservations", reservationController.getAllReservations);
+
 module.exports = router;
