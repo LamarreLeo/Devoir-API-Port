@@ -26,6 +26,17 @@ const createReservation = async (req, res) => {
     }
 };
 
+const getAllReservations = async (req, res) => {
+    try {
+        const reservations = await reservationService.getAllReservations();
+        return res.status(200).json(reservations);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     createReservation,
+    getAllReservations,
 };
