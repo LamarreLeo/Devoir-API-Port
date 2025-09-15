@@ -23,6 +23,11 @@ const createReservation = async (reservationData) => {
     return await reservation.save();
 };
 
+const getAllReservations = async () => {
+    return await Reservation.find();
+};
+
 module.exports = {
     createReservation,
+    getAllReservations,
 };
