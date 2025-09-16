@@ -25,7 +25,21 @@ const getAllReservations = async () => {
     return await Reservation.find();
 };
 
+const getReservationById = async (catwayNumber, reservationId) => {
+    const reservation = await Reservation.findOne({
+        _id: reservationId,
+        catwayNumber: catwayNumber,
+    });
+
+    if (!reservation) {
+        throw new Error("Réservation non trouvée");
+    }
+
+    return reservation;
+};
+
 module.exports = {
     createReservation,
     getAllReservations,
+    getReservationById,
 };

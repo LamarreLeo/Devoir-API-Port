@@ -65,4 +65,20 @@ const createReservationValidator = [
         .toDate(),
 ];
 
-module.exports = { createReservationValidator };
+const getReservationByIdValidator = [
+    param("id")
+        .notEmpty()
+        .withMessage("Le numéro de catway est requis")
+        .isInt({ min: 1 })
+        .withMessage("Le numéro de catway doit être un entier positif"),
+
+    param("idReservation")
+        .notEmpty()
+        .withMessage("Le numéro de la réservation est requis")
+        .isMongoId()
+        .withMessage(
+            "Le numéro de la réservation doit être un ID MongoDB valide"
+        ),
+];
+
+module.exports = { createReservationValidator, getReservationByIdValidator };

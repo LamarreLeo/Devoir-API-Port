@@ -14,4 +14,10 @@ router.post(
 
 router.get("/reservations", reservationController.getAllReservations);
 
+router.get(
+    "/reservations/:idReservation",
+    reservationValidator.getReservationByIdValidator,
+    reservationController.getReservationById
+);
+
 module.exports = router;
