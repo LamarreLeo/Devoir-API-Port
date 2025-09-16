@@ -36,7 +36,32 @@ const getAllReservations = async (req, res) => {
     }
 };
 
+const getReservationById = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const catwayNumber = Number(req.params.id);
+    const reservationId = req.params.idReservation;
+
+    try {
+        const reservation = await reservationService.getReservationById(
+            catwayNumber,
+            reservationId
+        );
+        return res.status(200).json(reservation);
+    } catch (error) {
+        if (error.message === "Réservation non trouvée") {
+            return res.status(404).json({ message: error.message });
+        }
+        console.error(error);
+        return res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     createReservation,
     getAllReservations,
+    getReservationById,
 };
