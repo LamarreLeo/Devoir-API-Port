@@ -4,7 +4,7 @@
  * @requires express-validator
  */
 
-const { body } = require("express-validator");
+const { body, param } = require("express-validator");
 
 /**
  * Validateur pour la création d'une réservation.
@@ -18,7 +18,7 @@ const { body } = require("express-validator");
  * });
  */
 const createReservationValidator = [
-    body("catwayNumber")
+    param("id")
         .notEmpty()
         .withMessage("Le numéro du catway est requis")
         .isInt({ min: 1 })

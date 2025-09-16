@@ -1,16 +1,14 @@
 const Reservation = require("../models/reservationModel");
 const Catway = require("../models/catwayModel");
 
-const createReservation = async (reservationData) => {
-    const catway = await Catway.findOne({
-        catwayNumber: reservationData.catwayNumber,
-    });
+const createReservation = async (reservationData, catwayNumber) => {
+    const catway = await Catway.findOne({ catwayNumber });
     if (!catway) {
         throw new Error("Catway non trouvé");
     }
 
     const overlappingReservation = await Reservation.findOne({
-        catwayNumber: reservationData.catwayNumber,
+        catwayNumber,
         startDate: { $lt: reservationData.endDate },
         endDate: { $gt: reservationData.startDate },
     });
@@ -19,7 +17,7 @@ const createReservation = async (reservationData) => {
         throw new Error("Ce catway est déjà réservé sur ces dates");
     }
 
-    const reservation = new Reservation(reservationData);
+    const reservation = new Reservation({ ...reservationData, catwayNumber });
     return await reservation.save();
 };
 

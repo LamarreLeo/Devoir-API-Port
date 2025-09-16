@@ -8,11 +8,11 @@ const createReservation = async (req, res) => {
     }
 
     const catwayNumber = Number(req.params.id);
-    const reservationData = { catwayNumber, ...req.body };
 
     try {
         const reservation = await reservationService.createReservation(
-            reservationData
+            req.body,
+            catwayNumber
         );
         return res.status(201).json(reservation);
     } catch (error) {
