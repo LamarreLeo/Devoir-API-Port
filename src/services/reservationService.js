@@ -76,9 +76,23 @@ const updateReservation = async (
     return await reservation.save();
 };
 
+const deleteReservation = async (catwayNumber, reservationId) => {
+    const reservation = await Reservation.findOneAndDelete({
+        _id: reservationId,
+        catwayNumber: catwayNumber,
+    });
+
+    if (!reservation) {
+        throw new Error("Réservation non trouvée");
+    }
+
+    return reservation;
+};
+
 module.exports = {
     createReservation,
     getAllReservations,
     getReservationById,
     updateReservation,
+    deleteReservation,
 };
