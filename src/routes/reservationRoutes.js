@@ -20,4 +20,10 @@ router.get(
     reservationController.getReservationById
 );
 
+router.put(
+    "/reservations/:idReservation",
+    reservationValidator.updateReservationValidator,
+    reservationController.updateReservation
+);
+
 module.exports = router;
