@@ -81,4 +81,63 @@ const getReservationByIdValidator = [
         ),
 ];
 
-module.exports = { createReservationValidator, getReservationByIdValidator };
+const updateReservationValidator = [
+    param("id")
+        .notEmpty()
+        .withMessage("Le numéro de catway est requis")
+        .isInt({ min: 1 })
+        .withMessage("Le numéro de catway doit être un entier positif"),
+
+    param("idReservation")
+        .notEmpty()
+        .withMessage("Le numéro de la réservation est requis")
+        .isMongoId()
+        .withMessage(
+            "Le numéro de la réservation doit être un ID MongoDB valide"
+        ),
+
+    body("clientName")
+        .optional()
+        .isLength({ max: 100 })
+        .withMessage("Le nom du client ne peut pas dépasser 100 caractères")
+        .isString()
+        .withMessage("Le nom du client doit être une chaîne de caractères")
+        .trim(),
+
+    body("boatName")
+        .optional()
+        .isLength({ max: 100 })
+        .withMessage("Le nom du bateau ne peut pas dépasser 100 caractères")
+        .isString()
+        .withMessage("Le nom du bateau doit être une chaîne de caractères")
+        .trim(),
+
+    body("startDate")
+        .optional()
+        .isISO8601()
+        .withMessage("La date de début doit être une date valide")
+        .toDate(),
+
+    body("endDate")
+        .optional()
+        .isISO8601()
+        .withMessage("La date de fin doit être une date valide")
+        .custom((value, { req }) => {
+            if (
+                req.body.startDate &&
+                new Date(value) < new Date(req.body.startDate)
+            ) {
+                throw new Error(
+                    "La date de fin doit être supérieure à la date de début"
+                );
+            }
+            return true;
+        })
+        .toDate(),
+];
+
+module.exports = {
+    createReservationValidator,
+    getReservationByIdValidator,
+    updateReservationValidator,
+};
