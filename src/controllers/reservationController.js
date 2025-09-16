@@ -95,9 +95,37 @@ const updateReservation = async (req, res) => {
     }
 };
 
+const deleteReservation = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const catwayNumber = Number(req.params.id);
+    const reservationId = req.params.idReservation;
+
+    try {
+        const deletedReservation = await reservationService.deleteReservation(
+            catwayNumber,
+            reservationId
+        );
+        return res.status(200).json({
+            message: "Réservation supprimée avec succès",
+            reservation: deletedReservation,
+        });
+    } catch (error) {
+        if (error.message === "Réservation non trouvée") {
+            return res.status(404).json({ message: error.message });
+        }
+        console.error(error);
+        return res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     createReservation,
     getAllReservations,
     getReservationById,
     updateReservation,
+    deleteReservation,
 };
