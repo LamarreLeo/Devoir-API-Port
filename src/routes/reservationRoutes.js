@@ -26,4 +26,10 @@ router.put(
     reservationController.updateReservation
 );
 
+router.delete(
+    "/reservations/:idReservation",
+    reservationValidator.deleteReservationValidator,
+    reservationController.deleteReservation
+);
+
 module.exports = router;
