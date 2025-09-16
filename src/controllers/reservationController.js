@@ -1,6 +1,28 @@
+/**
+ * Contrôleur pour la gestion des réservations de catways.
+ * @module controllers/reservationController
+ * @requires express-validator
+ * @requires ../services/reservationService
+ */
+
 const { validationResult } = require("express-validator");
 const reservationService = require("../services/reservationService");
 
+/**
+ * Crée une nouvelle réservation pour un catway.
+ * @async
+ * @function createReservation
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.params - Les paramètres de la requête.
+ * @param {string} req.params.id - L'ID du catway.
+ * @param {Object} req.body - Le corps de la requête contenant les données de la réservation.
+ * @param {string} req.body.clientName - Le nom du client.
+ * @param {string} req.body.boatName - Le nom du bateau.
+ * @param {string} req.body.startDate - La date de début de la réservation (format ISO).
+ * @param {string} req.body.endDate - La date de fin de la réservation (format ISO).
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise<Object>} Réponse JSON avec la réservation créée ou un message d'erreur.
+ */
 const createReservation = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -26,6 +48,14 @@ const createReservation = async (req, res) => {
     }
 };
 
+/**
+ * Récupère toutes les réservations.
+ * @async
+ * @function getAllReservations
+ * @param {Object} req - La requête Express.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise<Object>} Réponse JSON avec la liste des réservations ou un message d'erreur.
+ */
 const getAllReservations = async (req, res) => {
     try {
         const reservations = await reservationService.getAllReservations();
@@ -36,6 +66,17 @@ const getAllReservations = async (req, res) => {
     }
 };
 
+/**
+ * Récupère une réservation par son ID et le numéro de catway.
+ * @async
+ * @function getReservationById
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.params - Les paramètres de la requête.
+ * @param {string} req.params.id - Le numéro du catway.
+ * @param {string} req.params.idReservation - L'ID de la réservation.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise<Object>} Réponse JSON avec la réservation ou un message d'erreur.
+ */
 const getReservationById = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -60,6 +101,22 @@ const getReservationById = async (req, res) => {
     }
 };
 
+/**
+ * Met à jour une réservation existante.
+ * @async
+ * @function updateReservation
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.params - Les paramètres de la requête.
+ * @param {string} req.params.id - Le numéro du catway.
+ * @param {string} req.params.idReservation - L'ID de la réservation à mettre à jour.
+ * @param {Object} req.body - Les champs à mettre à jour.
+ * @param {string} [req.body.clientName] - Le nouveau nom du client (optionnel).
+ * @param {string} [req.body.boatName] - Le nouveau nom du bateau (optionnel).
+ * @param {string} [req.body.startDate] - La nouvelle date de début (optionnel, format ISO).
+ * @param {string} [req.body.endDate] - La nouvelle date de fin (optionnel, format ISO).
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise<Object>} Réponse JSON avec la réservation mise à jour ou un message d'erreur.
+ */
 const updateReservation = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -95,6 +152,17 @@ const updateReservation = async (req, res) => {
     }
 };
 
+/**
+ * Supprime une réservation.
+ * @async
+ * @function deleteReservation
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.params - Les paramètres de la requête.
+ * @param {string} req.params.id - Le numéro du catway.
+ * @param {string} req.params.idReservation - L'ID de la réservation à supprimer.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise<Object>} Réponse JSON avec un message de succès ou d'erreur.
+ */
 const deleteReservation = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
