@@ -136,8 +136,11 @@ const updateReservationValidator = [
         .toDate(),
 ];
 
+const deleteReservationValidator = getReservationByIdValidator;
+
 module.exports = {
     createReservationValidator,
     getReservationByIdValidator,
     updateReservationValidator,
+    deleteReservationValidator,
 };
