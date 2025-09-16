@@ -38,8 +38,47 @@ const getReservationById = async (catwayNumber, reservationId) => {
     return reservation;
 };
 
+const updateReservation = async (
+    catwayNumber,
+    reservationId,
+    updatedFields
+) => {
+    const reservation = await Reservation.findOne({
+        _id: reservationId,
+        catwayNumber: catwayNumber,
+    });
+
+    if (!reservation) {
+        throw new Error("Réservation non trouvée");
+    }
+
+    const newStartDate = updatedFields.startDate || reservation.startDate;
+    const newEndDate = updatedFields.endDate || reservation.endDate;
+
+    if (newEndDate < newStartDate) {
+        throw new Error(
+            "La date de fin doit être supérieure à la date de début"
+        );
+    }
+
+    const overlappingReservation = await Reservation.findOne({
+        _id: { $ne: reservationId },
+        catwayNumber,
+        startDate: { $lt: newEndDate },
+        endDate: { $gt: newStartDate },
+    });
+
+    if (overlappingReservation) {
+        throw new Error("Ce catway est déjà réservé sur ces dates");
+    }
+
+    reservation.set(updatedFields);
+    return await reservation.save();
+};
+
 module.exports = {
     createReservation,
     getAllReservations,
     getReservationById,
+    updateReservation,
 };
