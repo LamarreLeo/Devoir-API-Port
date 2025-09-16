@@ -60,8 +60,44 @@ const getReservationById = async (req, res) => {
     }
 };
 
+const updateReservation = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const catwayNumber = Number(req.params.id);
+    const reservationId = req.params.idReservation;
+    const updatedFields = req.body;
+
+    try {
+        const updatedReservation = await reservationService.updateReservation(
+            catwayNumber,
+            reservationId,
+            updatedFields
+        );
+        return res.status(200).json(updatedReservation);
+    } catch (error) {
+        if (error.message === "Réservation non trouvée") {
+            return res.status(404).json({ message: error.message });
+        }
+        if (error.message === "Ce catway est déjà réservé sur ces dates") {
+            return res.status(409).json({ message: error.message });
+        }
+        if (
+            error.message ===
+            "La date de fin doit être supérieure à la date de début"
+        ) {
+            return res.status(400).json({ message: error.message });
+        }
+        console.error(error);
+        return res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     createReservation,
     getAllReservations,
     getReservationById,
+    updateReservation,
 };
