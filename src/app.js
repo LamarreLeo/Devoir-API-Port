@@ -23,8 +23,12 @@ app.use("/api/catways/:id", reservationRoutes);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+app.use(express.static("public"));
 
 app.use("/", indexRoutes);
 
+const HOST = process.env.HOST || "localhost";
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, HOST, () =>
+    console.log(`🚀 Server running on http://${HOST}:${PORT}`)
+);

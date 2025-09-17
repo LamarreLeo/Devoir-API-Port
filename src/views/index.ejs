@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title><%= title %></title>
+        <link rel="stylesheet" href="/css/style.css" />
     </head>
     <body>
         <header>
@@ -11,7 +12,7 @@
         </header>
 
         <main>
-            <section>
+            <section class="presentation">
                 <h2>Bienvenue</h2>
                 <p>
                     Cette API permet de gérer les catways, les réservations et
@@ -21,12 +22,12 @@
 
             <section>
                 <h2>Connexion</h2>
-                <form action="/api/users/login" method="post">
-                    <div>
+                <form action="/api/users/login" method="post" class="form">
+                    <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" name="email" id="email" required />
                     </div>
-                    <div>
+                    <div class="form-group">
                         <label for="password">Mot de passe</label>
                         <input
                             type="password"
