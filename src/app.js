@@ -5,6 +5,7 @@ const sessionMiddleware = require("./middlewares/sessionMiddleware");
 const userRoutes = require("./routes/userRoutes");
 const catwayRoutes = require("./routes/catwayRoutes");
 const reservationRoutes = require("./routes/reservationRoutes");
+const indexRoutes = require("./routes/indexRoutes");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -22,6 +23,8 @@ app.use("/api/catways/:id", reservationRoutes);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+app.use("/", indexRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
