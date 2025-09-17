@@ -5,49 +5,67 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title><%= title %></title>
         <link rel="stylesheet" href="/css/style.css" />
+        <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body>
-        <header>
+        <header
+            class="flex justify-center items-center bg-gray-800 text-white h-16 text-2xl"
+        >
             <h1>API Port Russell</h1>
         </header>
 
-        <main>
-            <section class="presentation">
-                <h2>Bienvenue</h2>
-                <p>
-                    Cette API permet de gérer les catways, les réservations et
-                    les utilisateurs.
-                </p>
-            </section>
+        <main class="min-h-[calc(100vh-8rem)] flex flex-col items-center justify-center">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <section
+                    class="flex flex-col items-center justify-center p-4 text-center gap-4"
+                >
+                    <h2 class="text-2xl">Bienvenue</h2>
+                    <p class="text-lg">
+                        Cette API permet de gérer les catways, les réservations
+                        et les utilisateurs.
+                    </p>
+                    <a class="underline text-blue-500" href="#">Documentation de l'API</a>
+                </section>
 
-            <section>
-                <h2>Connexion</h2>
-                <form action="/api/users/login" method="post" class="form">
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" name="email" id="email" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Mot de passe</label>
-                        <input
-                            type="password"
-                            name="password"
-                            id="password"
-                            required
-                        />
-                    </div>
-                    <button type="submit">Se connecter</button>
-                </form>
-            </section>
-
-            <nav aria-label="Liens utiles">
-                <ul>
-                    <li><a href="#">Documentation de l'API</a></li>
-                </ul>
-            </nav>
+                <section
+                    class="flex flex-col items-center justify-center p-4 gap-4"
+                >
+                    <h2 class="text-2xl">Connexion</h2>
+                    <form action="/api/users/login" method="post" class="flex flex-col gap-4 border border-gray-300 rounded p-4">
+                        <div class="flex flex-col gap-2">
+                            <label class="text-lg" for="email">Email</label>
+                            <input
+                                class="border border-gray-300 rounded p-2"
+                                type="email"
+                                name="email"
+                                id="email"
+                                required
+                            />
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label class="text-lg" for="password">Mot de passe</label>
+                            <input
+                                class="border border-gray-300 rounded p-2"
+                                type="password"
+                                name="password"
+                                id="password"
+                                required
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            class="bg-blue-500 text-white p-2"
+                        >
+                            Se connecter
+                        </button>
+                    </form>
+                </section>
+            </div>
         </main>
 
-        <footer>
+        <footer
+            class="flex justify-center items-center bg-gray-800 text-white h-16"
+        >
             <p>© 2025 API Port Russell. Tous droits réservés.</p>
         </footer>
     </body>
