@@ -183,10 +183,8 @@ const userLogin = async (req, res) => {
     try {
         const user = await userService.userLogin(email, password);
         req.session.user = user;
-        return res.status(200).json({
-            message: "Connexion réussie",
-            user,
-        });
+
+        return res.redirect("/dashboard");
     } catch (err) {
         if (err.message === "Email ou mot de passe incorrect") {
             return res.status(401).json({ message: err.message });

@@ -5,7 +5,7 @@ const sessionMiddleware = require("./middlewares/sessionMiddleware");
 const userRoutes = require("./routes/userRoutes");
 const catwayRoutes = require("./routes/catwayRoutes");
 const reservationRoutes = require("./routes/reservationRoutes");
-const indexRoutes = require("./routes/indexRoutes");
+const indexRoutes = require("./routes/viewRoutes");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -13,6 +13,7 @@ const app = express();
 
 connectDB();
 
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 sessionMiddleware(app);
