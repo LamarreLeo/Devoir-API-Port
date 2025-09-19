@@ -6,6 +6,7 @@ const userRoutes = require("./routes/userRoutes");
 const catwayRoutes = require("./routes/catwayRoutes");
 const reservationRoutes = require("./routes/reservationRoutes");
 const indexRoutes = require("./routes/viewRoutes");
+const methodOverride = require("method-override");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -17,6 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 sessionMiddleware(app);
+
+app.use(methodOverride("_method"));
 
 app.use("/api/users", userRoutes);
 app.use("/api/catways", catwayRoutes);
