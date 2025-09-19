@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const indexController = require("../controllers/viewController");
-const authMiddleware = require("../middlewares/authMiddleware");
+const viewAuthMiddleware = require("../middlewares/viewAuthMiddleware");
 
 router.get("/", indexController.renderHomePage);
+router.get("/unauthorized", indexController.renderUnauthorizedPage);
 
-router.use(authMiddleware);
+router.use(viewAuthMiddleware);
 
 router.get("/dashboard", indexController.renderDashboardPage);
 
