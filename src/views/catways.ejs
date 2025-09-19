@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title %></title>
+        <link rel="stylesheet" href="/css/style.css" />
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body>
+        <div class="flex flex-col md:flex-row gap-8 md:gap-0">
+            <!-- SIDEBAR -->
+            <aside
+                class="flex justify-center items-center h-[calc(100vh-8rem)] pt-12 bg-gray-200 border-r border-b border-gray-400 rounded-b-xl w-full md:h-screen md:w-64"
+            >
+                <nav aria-label="Navigation principale">
+                    <ul class="flex flex-col gap-4">
+                        <li class="p-2">
+                            <a
+                                class="hover:text-blue-500 hover:underline"
+                                href="/dashboard"
+                                >Dashboard</a
+                            >
+                        </li>
+                        <li class="bg-blue-500 text-white p-2 rounded">
+                            <a href="/catways">Catways</a>
+                        </li>
+                        <li class="p-2">
+                            <a
+                                class="hover:text-blue-500 hover:underline"
+                                href="/reservations"
+                                >Reservations</a
+                            >
+                        </li>
+                        <li class="p-2">
+                            <a
+                                class="hover:text-blue-500 hover:underline"
+                                href="/users"
+                                >Users</a
+                            >
+                        </li>
+                        <li class="p-2">
+                            <a
+                                class="hover:text-blue-500 hover:underline"
+                                href="#"
+                                >Documentation de l'API</a
+                            >
+                        </li>
+                        <li class="p-2">
+                            <a
+                                class="text-red-500 hover:text-red-600 hover:underline"
+                                href="/api/users/logout"
+                                >Se deconnecter</a
+                            >
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+            <!-- END SIDEBAR -->
+
+            <!-- MAIN -->
+            <main class="w-full flex flex-col justify-center gap-8">
+                <h1 class="flex justify-center text-4xl font-bold mt-12">
+                    Catways
+                </h1>
+
+                <!-- CATWAYS ADD -->
+                <section class="flex flex-col gap-4 md:p-4">
+                    <h2 class="text-xl underline font-bold text-center">
+                        Ajouter un catway
+                    </h2>
+                    <form
+                        action="/api/catways"
+                        method="POST"
+                        class="flex flex-col items-center gap-6 border border-gray-900 text-center rounded max-w-6xl mx-auto p-6"
+                    >
+                        <div class="grid grid-cols-2 gap-4">
+                            <label for="catwayNumber">Numéro du catway :</label>
+                            <input
+                                type="number"
+                                id="catwayNumber"
+                                name="catwayNumber"
+                                required
+                                class="border border-gray-900 p-2 rounded"
+                            />
+                            <label for="catwayType">Type de catway :</label>
+                            <input
+                                type="text"
+                                id="catwayType"
+                                name="catwayType"
+                                required
+                                class="border border-gray-900 p-2 rounded"
+                            />
+                            <label for="catwayState">État du catway :</label>
+                            <input
+                                type="text"
+                                id="catwayState"
+                                name="catwayState"
+                                required
+                                class="border border-gray-900 p-2 rounded"
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            class="bg-blue-500 text-white p-2 rounded"
+                        >
+                            Ajouter
+                        </button>
+                    </form>
+                </section>
+                <!-- END CATWAYS ADD -->
+
+                <!-- CATWAYS LIST -->
+                <section class="flex flex-col gap-4 md:p-4">
+                    <h2 class="text-xl underline font-bold text-center">
+                        Liste des catways
+                    </h2>
+
+                    <% if (catways.length === 0) { %>
+                    <p>Aucun catway trouvé.</p>
+                    <% } else { %>
+                    <table
+                        class="border border-gray-900 text-center max-w-6xl mx-auto"
+                    >
+                        <!-- TABLE HEAD -->
+                        <thead class="border border-gray-900 p-2 bg-blue-200">
+                            <tr>
+                                <th class="border border-gray-900 p-2 w-1/6">
+                                    Catway
+                                </th>
+                                <th class="border border-gray-900 p-2 w-1/6">
+                                    Type
+                                </th>
+                                <th class="border border-gray-900 p-2 w-1/6">
+                                    État
+                                </th>
+                                <th class="border border-gray-900 p-2 w-1/6">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <!-- END TABLE HEAD -->
+
+                        <!-- TABLE BODY -->
+                        <tbody>
+                            <% catways.forEach(catways => { %>
+                            <tr id="row-<%= catways.catwayNumber %>">
+                                <td class="border border-gray-900 p-2">
+                                    <%= catways.catwayNumber %>
+                                </td>
+
+                                <td class="border border-gray-900 p-2">
+                                    <%= catways.catwayType %>
+                                </td>
+
+                                <td class="border border-gray-900 p-2">
+                                    <%= catways.catwayState %>
+                                </td>
+
+                                <td class="border border-gray-900 p-2">
+                                    <!-- MODIFIER -->
+                                    <button
+                                        onclick="showEditForm('<%= catways.catwayNumber %>', '<%= catways.catwayType %>', '<%= catways.catwayState %>')"
+                                        class="text-blue-500 hover:underline"
+                                    >
+                                        Modifier
+                                    </button>
+                                    <!-- END MODIFIER -->
+
+                                    <!-- SUPPRIMER -->
+                                    <form
+                                        action="/api/catways/<%= catways.catwayNumber %>?_method=DELETE"
+                                        method="POST"
+                                        onsubmit="return confirm('Voulez-vous vraiment supprimer ce catway ?');"
+                                    >
+                                        <button
+                                            type="submit"
+                                            class="text-red-500 hover:underline"
+                                        >
+                                            Supprimer
+                                        </button>
+                                    </form>
+                                    <!-- END SUPPRIMER -->
+                                </td>
+                            </tr>
+
+                            <!-- EDIT FORM -->
+                            <tr
+                                id="edit-<%= catways.catwayNumber %>"
+                                class="hidden border border-gray-900 p-2"
+                            >
+                                <td class="border border-gray-900 p-2">
+                                    <%= catways.catwayNumber %>
+                                </td>
+                                <td class="border border-gray-900 p-2">
+                                    <%= catways.catwayType %>
+                                </td>
+                                <td colspan="2" class="p-2">
+                                    <form
+                                        action="/api/catways/<%= catways.catwayNumber %>?_method=PUT"
+                                        method="POST"
+                                        class="flex flex-col gap-2 items-center px-2"
+                                    >
+                                        <input
+                                            type="text"
+                                            name="catwayState"
+                                            value="<%= catways.catwayState %>"
+                                            class="border border-gray-900 rounded py-1 px-2 text-center w-1/2"
+                                        />
+                                        <div class="flex gap-4">
+                                            <button
+                                                type="submit"
+                                                class="text-green-500 hover:underline"
+                                            >
+                                                Valider
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onclick="hideEditForm('<%= catways.catwayNumber %>')"
+                                                class="text-red-500 hover:underline"
+                                            >
+                                                Annuler
+                                            </button>
+                                        </div>
+                                    </form>
+                                </td>
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                    <% } %>
+                    <!-- END CATWAYS TABLE -->
+                </section>
+                <!-- END CATWAYS LIST -->
+            </main>
+            <!-- END MAIN -->
+        </div>
+
+        <script>
+            function showEditForm(catwayNumber, catwayType, catwayState) {
+                document
+                    .getElementById("edit-" + catwayNumber)
+                    .classList.remove("hidden");
+                document
+                    .getElementById("row-" + catwayNumber)
+                    .classList.add("hidden");
+            }
+
+            function hideEditForm(catwayNumber) {
+                document
+                    .getElementById("edit-" + catwayNumber)
+                    .classList.add("hidden");
+                document
+                    .getElementById("row-" + catwayNumber)
+                    .classList.remove("hidden");
+            }
+        </script>
+    </body>
+</html>

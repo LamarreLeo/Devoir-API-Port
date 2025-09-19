@@ -15,7 +15,7 @@ const createCatway = async (req, res) => {
     try {
         const catwayData = req.body;
         const newCatway = await catwayService.createCatway(catwayData);
-        return res.status(201).json(newCatway);
+        return res.status(201).redirect("/catways");
     } catch (err) {
         if (err.code === 11000) {
             return res
@@ -94,7 +94,7 @@ const updateCatwayState = async (req, res) => {
             return res.status(404).json({ message: "Catway non trouvé" });
         }
 
-        return res.status(200).json(updatedCatway);
+        return res.redirect("/catways"), res.status(200);
     } catch (err) {
         return res
             .status(500)
@@ -119,7 +119,7 @@ const deleteCatway = async (req, res) => {
         if (!deletedCatway) {
             return res.status(404).json({ message: "Catway non trouvé" });
         }
-        return res.status(200).json(deletedCatway);
+        return res.status(200).redirect("/catways");
     } catch (err) {
         return res
             .status(500)

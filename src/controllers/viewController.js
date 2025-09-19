@@ -1,4 +1,5 @@
 const Reservation = require("../models/reservationModel");
+const catwayService = require("../services/catwayService");
 
 const renderHomePage = (req, res) => {
     res.render("index", { title: "Accueil - API Port" });
@@ -26,8 +27,25 @@ const renderDashboardPage = async (req, res) => {
     }
 };
 
+const renderCatwaysPage = async (req, res) => {
+    try {
+        const catways = await catwayService.getAllCatways();
+        res.render("catways", {
+            title: "Catways - API Port",
+            user: req.session.user,
+            catways,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(
+            "Une erreur est survenue lors de la récupération des catways."
+        );
+    }
+};
+
 module.exports = {
     renderHomePage,
     renderUnauthorizedPage,
     renderDashboardPage,
+    renderCatwaysPage,
 };
