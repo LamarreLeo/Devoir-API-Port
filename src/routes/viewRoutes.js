@@ -4,6 +4,7 @@ const indexController = require("../controllers/viewController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
 router.get("/", indexController.renderHomePage);
+router.get("/unauthorized", indexController.renderUnauthorizedPage);
 
 router.use(authMiddleware);
 
