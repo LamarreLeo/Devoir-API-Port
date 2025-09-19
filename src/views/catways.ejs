@@ -9,6 +9,7 @@
     </head>
     <body>
         <div class="flex flex-col md:flex-row gap-8 md:gap-0">
+            <!-- SIDEBAR -->
             <aside
                 class="flex justify-center items-center h-[calc(100vh-8rem)] pt-12 bg-gray-200 w-full md:h-screen md:w-64"
             >
@@ -55,9 +56,13 @@
                     </ul>
                 </nav>
             </aside>
+            <!-- END SIDEBAR -->
 
+            <!-- MAIN -->
             <main class="w-full flex flex-col justify-center gap-8">
                 <h1 class="flex justify-center text-4xl font-bold">Catways</h1>
+
+                <!-- CATWAYS -->
                 <section class="flex flex-col gap-4 md:p-4">
                     <h2 class="text-xl underline font-bold text-center">
                         Liste des catways
@@ -81,6 +86,9 @@
                                 <th class="border border-gray-900 p-2 w-1/6">
                                     État
                                 </th>
+                                <th class="border border-gray-900 p-2 w-1/6">
+                                    Actions
+                                </th>
                             </tr>
                         </thead>
                         <!-- END TABLE HEAD -->
@@ -88,7 +96,7 @@
                         <!-- TABLE BODY -->
                         <tbody>
                             <% catways.forEach(catways => { %>
-                            <tr>
+                            <tr id="row-<%= catways.catwayNumber %>">
                                 <td class="border border-gray-900 p-2">
                                     <%= catways.catwayNumber %>
                                 </td>
@@ -100,6 +108,59 @@
                                 <td class="border border-gray-900 p-2">
                                     <%= catways.catwayState %>
                                 </td>
+
+                                <td class="border border-gray-900 p-2">
+                                    <!-- MODIFIER -->
+                                    <button
+                                        onclick="showEditForm('<%= catways.catwayNumber %>', '<%= catways.catwayType %>', '<%= catways.catwayState %>')"
+                                        class="text-blue-500 hover:underline"
+                                    >
+                                        Modifier
+                                    </button>
+                                    <!-- END MODIFIER -->
+
+                                    <!-- SUPPRIMER -->
+                                    <button
+                                        type="submit"
+                                        class="text-red-500 hover:underline"
+                                    >
+                                        Supprimer
+                                    </button>
+                                    <!-- END SUPPRIMER -->
+                                </td>
+                            </tr>
+
+                            <!-- EDIT FORM -->
+                            <tr
+                                id="edit-<%= catways.catwayNumber %>"
+                                class="hidden border border-gray-900 p-2"
+                            >
+                                <td colspan="4" class="p-2">
+                                    <form
+                                        action="/api/catways/<%= catways.catwayNumber %>"
+                                        method="POST"
+                                    >
+                                        <input
+                                            type="text"
+                                            name="catwayState"
+                                            value="<%= catways.catwayState %>"
+                                            class="border border-gray-900 p-2"
+                                        />
+                                        <button
+                                            type="submit"
+                                            class="text-green-500 hover:underline"
+                                        >
+                                            Valider
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onclick="hideEditForm('<%= catways.catwayNumber %>')"
+                                            class="text-red-500 hover:underline"
+                                        >
+                                            Annuler
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                             <% }) %>
                         </tbody>
@@ -107,7 +168,29 @@
                     <% } %>
                     <!-- END CATWAYS TABLE -->
                 </section>
+                <!-- END CATWAYS -->
             </main>
+            <!-- END MAIN -->
         </div>
+
+        <script>
+            function showEditForm(catwayNumber, catwayType, catwayState) {
+                document
+                    .getElementById("edit-" + catwayNumber)
+                    .classList.remove("hidden");
+                document
+                    .getElementById("row-" + catwayNumber)
+                    .classList.add("hidden");
+            }
+
+            function hideEditForm(catwayNumber) {
+                document
+                    .getElementById("edit-" + catwayNumber)
+                    .classList.add("hidden");
+                document
+                    .getElementById("row-" + catwayNumber)
+                    .classList.remove("hidden");
+            }
+        </script>
     </body>
 </html>
