@@ -135,30 +135,39 @@
                                 id="edit-<%= catways.catwayNumber %>"
                                 class="hidden border border-gray-900 p-2"
                             >
-                                <td colspan="4" class="p-2">
+                                <td class="border border-gray-900 p-2">
+                                    <%= catways.catwayNumber %>
+                                </td>
+                                <td class="border border-gray-900 p-2">
+                                    <%= catways.catwayType %>
+                                </td>
+                                <td colspan="2" class="p-2">
                                     <form
                                         action="/api/catways/<%= catways.catwayNumber %>?_method=PUT"
                                         method="POST"
+                                        class="flex flex-col gap-2 items-center px-2"
                                     >
                                         <input
                                             type="text"
                                             name="catwayState"
                                             value="<%= catways.catwayState %>"
-                                            class="border border-gray-900 p-2"
+                                            class="border border-gray-900 rounded py-1 px-2 text-center w-1/2"
                                         />
-                                        <button
-                                            type="submit"
-                                            class="text-green-500 hover:underline"
-                                        >
-                                            Valider
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onclick="hideEditForm('<%= catways.catwayNumber %>')"
-                                            class="text-red-500 hover:underline"
-                                        >
-                                            Annuler
-                                        </button>
+                                        <div class="flex gap-4">
+                                            <button
+                                                type="submit"
+                                                class="text-green-500 hover:underline"
+                                            >
+                                                Valider
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onclick="hideEditForm('<%= catways.catwayNumber %>')"
+                                                class="text-red-500 hover:underline"
+                                            >
+                                                Annuler
+                                            </button>
+                                        </div>
                                     </form>
                                 </td>
                             </tr>
