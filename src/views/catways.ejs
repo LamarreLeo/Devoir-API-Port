@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title %></title>
+        <link rel="stylesheet" href="/css/style.css" />
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body>
+        <div class="flex flex-col md:flex-row gap-8 md:gap-0">
+            <aside
+                class="flex justify-center items-center h-[calc(100vh-8rem)] pt-12 bg-gray-200 w-full md:h-screen md:w-64"
+            >
+                <nav aria-label="Navigation principale">
+                    <ul class="flex flex-col gap-4">
+                        <li class="p-2">
+                            <a
+                                class="hover:text-blue-500 hover:underline"
+                                href="/dashboard"
+                                >Dashboard</a
+                            >
+                        </li>
+                        <li class="bg-blue-500 text-white p-2 rounded">
+                            <a href="/catways">Catways</a>
+                        </li>
+                        <li class="p-2">
+                            <a
+                                class="hover:text-blue-500 hover:underline"
+                                href="/reservations"
+                                >Reservations</a
+                            >
+                        </li>
+                        <li class="p-2">
+                            <a
+                                class="hover:text-blue-500 hover:underline"
+                                href="/users"
+                                >Users</a
+                            >
+                        </li>
+                        <li class="p-2">
+                            <a
+                                class="hover:text-blue-500 hover:underline"
+                                href="#"
+                                >Documentation de l'API</a
+                            >
+                        </li>
+                        <li class="p-2">
+                            <a
+                                class="text-red-500 hover:text-red-600 hover:underline"
+                                href="/api/users/logout"
+                                >Se deconnecter</a
+                            >
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <main class="w-full flex flex-col justify-center gap-8">
+                <h1 class="flex justify-center text-4xl font-bold">Catways</h1>
+            </main>
+        </div>
+    </body>
+</html>

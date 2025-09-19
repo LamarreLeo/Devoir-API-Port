@@ -9,5 +9,6 @@ router.get("/unauthorized", indexController.renderUnauthorizedPage);
 router.use(viewAuthMiddleware);
 
 router.get("/dashboard", indexController.renderDashboardPage);
+router.get("/catways", indexController.renderCatwaysPage);
 
 module.exports = router;
