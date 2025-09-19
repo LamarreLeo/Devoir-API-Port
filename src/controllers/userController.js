@@ -184,7 +184,7 @@ const userLogin = async (req, res) => {
         const user = await userService.userLogin(email, password);
         req.session.user = user;
 
-        return res.redirect("/dashboard");
+        return res.status(200), res.redirect("/dashboard");
     } catch (err) {
         if (err.message === "Email ou mot de passe incorrect") {
             return res.status(401).json({ message: err.message });
@@ -215,9 +215,7 @@ const userLogout = async (req, res) => {
                     });
                 }
                 res.clearCookie("connect.sid");
-                return res.status(200).json({
-                    message: "Déconnexion réussie",
-                });
+                return res.status(200), res.redirect("/");
             });
         } else {
             return res
