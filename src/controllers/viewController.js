@@ -1,3 +1,5 @@
+const Reservation = require("../models/reservationModel");
+
 const renderHomePage = (req, res) => {
     res.render("index", { title: "Accueil - API Port" });
 };
@@ -7,20 +9,17 @@ const renderUnauthorizedPage = (req, res) => {
 };
 
 const renderDashboardPage = async (req, res) => {
-    const formattedDate = new Date().toLocaleDateString("fr-FR");
-
     try {
         const reservations = await Reservation.find().sort({ startDate: 1 });
-
         res.render("dashboard", {
             title: "Dashboard - API Port",
             user: req.session.user,
-            formattedDate,
+            formattedDate: new Date().toLocaleDateString("fr-FR"),
             reservations,
         });
     } catch (error) {
         console.error("Error fetching reservations:", error);
-        res.status(500).render("error", {
+        res.status(500).render({
             title: "500 - Internal Server Error",
             error: "Une erreur est survenue lors de la récupération des réservations.",
         });
