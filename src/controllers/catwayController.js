@@ -15,7 +15,7 @@ const createCatway = async (req, res) => {
     try {
         const catwayData = req.body;
         const newCatway = await catwayService.createCatway(catwayData);
-        return res.status(201).json(newCatway);
+        return res.status(201).redirect("/catways");
     } catch (err) {
         if (err.code === 11000) {
             return res

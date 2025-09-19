@@ -60,9 +60,57 @@
 
             <!-- MAIN -->
             <main class="w-full flex flex-col justify-center gap-8">
-                <h1 class="flex justify-center text-4xl font-bold">Catways</h1>
+                <h1 class="flex justify-center text-4xl font-bold mt-12">
+                    Catways
+                </h1>
 
-                <!-- CATWAYS -->
+                <!-- CATWAYS ADD -->
+                <section class="flex flex-col gap-4 md:p-4">
+                    <h2 class="text-xl underline font-bold text-center">
+                        Ajouter un catway
+                    </h2>
+                    <form
+                        action="/api/catways"
+                        method="POST"
+                        class="flex flex-col max-w-6xl gap-4 mx-auto border border-gray-900 p-4 rounded items-center"
+                    >
+                        <div class="flex items-center gap-4">
+                            <label for="catwayNumber">Numéro du catway :</label>
+                            <input
+                                type="number"
+                                id="catwayNumber"
+                                name="catwayNumber"
+                                required
+                                class="border border-gray-900 p-2 rounded"
+                            />
+                            <label for="catwayType">Type de catway :</label>
+                            <input
+                                type="text"
+                                id="catwayType"
+                                name="catwayType"
+                                required
+                                class="border border-gray-900 p-2 rounded"
+                            />
+                            <label for="catwayState">État du catway :</label>
+                            <input
+                                type="text"
+                                id="catwayState"
+                                name="catwayState"
+                                required
+                                class="border border-gray-900 p-2 rounded"
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            class="bg-blue-500 text-white p-2 rounded"
+                        >
+                            Ajouter
+                        </button>
+                    </form>
+                </section>
+                <!-- END CATWAYS ADD -->
+
+                <!-- CATWAYS LIST -->
                 <section class="flex flex-col gap-4 md:p-4">
                     <h2 class="text-xl underline font-bold text-center">
                         Liste des catways
@@ -177,7 +225,7 @@
                     <% } %>
                     <!-- END CATWAYS TABLE -->
                 </section>
-                <!-- END CATWAYS -->
+                <!-- END CATWAYS LIST -->
             </main>
             <!-- END MAIN -->
         </div>
