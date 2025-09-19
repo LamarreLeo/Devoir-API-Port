@@ -94,7 +94,7 @@ const updateCatwayState = async (req, res) => {
             return res.status(404).json({ message: "Catway non trouvé" });
         }
 
-        return res.status(200).json(updatedCatway);
+        return res.redirect("/catways"), res.status(200);
     } catch (err) {
         return res
             .status(500)
