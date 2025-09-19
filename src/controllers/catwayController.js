@@ -119,7 +119,7 @@ const deleteCatway = async (req, res) => {
         if (!deletedCatway) {
             return res.status(404).json({ message: "Catway non trouvé" });
         }
-        return res.status(200).json(deletedCatway);
+        return res.status(200).redirect("/catways");
     } catch (err) {
         return res
             .status(500)
