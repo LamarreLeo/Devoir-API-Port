@@ -58,6 +58,55 @@
 
             <main class="w-full flex flex-col justify-center gap-8">
                 <h1 class="flex justify-center text-4xl font-bold">Catways</h1>
+                <section class="flex flex-col gap-4 md:p-4">
+                    <h2 class="text-xl underline font-bold text-center">
+                        Liste des catways
+                    </h2>
+
+                    <% if (catways.length === 0) { %>
+                    <p>Aucun catway trouvé.</p>
+                    <% } else { %>
+                    <table
+                        class="border border-gray-900 text-center max-w-6xl mx-auto"
+                    >
+                        <!-- TABLE HEAD -->
+                        <thead class="border border-gray-900 p-2 bg-blue-200">
+                            <tr>
+                                <th class="border border-gray-900 p-2 w-1/6">
+                                    Catway
+                                </th>
+                                <th class="border border-gray-900 p-2 w-1/6">
+                                    Type
+                                </th>
+                                <th class="border border-gray-900 p-2 w-1/6">
+                                    État
+                                </th>
+                            </tr>
+                        </thead>
+                        <!-- END TABLE HEAD -->
+
+                        <!-- TABLE BODY -->
+                        <tbody>
+                            <% catways.forEach(catways => { %>
+                            <tr>
+                                <td class="border border-gray-900 p-2">
+                                    <%= catways.catwayNumber %>
+                                </td>
+
+                                <td class="border border-gray-900 p-2">
+                                    <%= catways.catwayType %>
+                                </td>
+
+                                <td class="border border-gray-900 p-2">
+                                    <%= catways.catwayState %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                    <% } %>
+                    <!-- END CATWAYS TABLE -->
+                </section>
             </main>
         </div>
     </body>

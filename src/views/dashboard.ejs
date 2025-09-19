@@ -9,6 +9,7 @@
     </head>
     <body>
         <div class="flex flex-col md:flex-row gap-8 md:gap-0">
+            <!-- SIDEBAR -->
             <aside
                 class="flex justify-center items-center h-[calc(100vh-8rem)] pt-12 bg-gray-200 w-full md:h-screen md:w-64"
             >
@@ -55,28 +56,37 @@
                     </ul>
                 </nav>
             </aside>
+            <!-- END SIDEBAR -->
 
+            <!-- MAIN -->
             <main class="w-full flex flex-col justify-center gap-8">
                 <h1 class="flex justify-center text-4xl font-bold">
                     Dashboard
                 </h1>
+
+                <!-- PROFILE -->
                 <section class="flex flex-col gap-2 p-4">
                     <h2 class="text-xl underline font-bold">Profile</h2>
                     <p>Username: <strong><%= user.username %></strong></p>
                     <p>Email: <strong><%= user.email %></strong></p>
                     <p>Date : <strong><%= formattedDate %></strong></p>
                 </section>
+                <!-- END PROFILE -->
 
+                <!-- RESERVATIONS -->
                 <section class="flex flex-col gap-4 md:p-4">
-                    <h2
-                        class="text-xl underline font-bold text-center md:text-left"
-                    >
+                    <h2 class="text-xl underline font-bold text-center">
                         Réservations en cours
                     </h2>
+
+                    <!-- RESERVATIONS TABLE -->
                     <% if (reservations.length === 0) { %>
                     <p>Aucune réservation trouvée.</p>
                     <% } else { %>
-                    <table class="border border-gray-900 text-center">
+                    <table
+                        class="border border-gray-900 text-center max-w-6xl mx-auto"
+                    >
+                        <!-- TABLE HEAD -->
                         <thead class="border border-gray-900 p-2 bg-blue-200">
                             <tr>
                                 <th class="border border-gray-900 p-2 w-1/6">
@@ -96,18 +106,24 @@
                                 </th>
                             </tr>
                         </thead>
+                        <!-- END TABLE HEAD -->
+
+                        <!-- TABLE BODY -->
                         <tbody>
                             <% reservations.forEach(reservations => { %>
                             <tr>
                                 <td class="border border-gray-900 p-2">
                                     <%= reservations.clientName %>
                                 </td>
+
                                 <td class="border border-gray-900 p-2">
                                     <%= reservations.boatName %>
                                 </td>
+
                                 <td class="border border-gray-900 p-2">
                                     <%= reservations.catwayNumber %>
                                 </td>
+
                                 <td class="border border-gray-900 p-2">
                                     <%=
                                     reservations.startDate.getDate().toString().padStart(2,
@@ -119,6 +135,7 @@
                                     reservations.startDate.getHours().toString().padStart(2,
                                     "0") %>H
                                 </td>
+
                                 <td class="border border-gray-900 p-2">
                                     <%=
                                     reservations.endDate.getDate().toString().padStart(2,
@@ -135,8 +152,11 @@
                         </tbody>
                     </table>
                     <% } %>
+                    <!-- END RESERVATIONS TABLE -->
                 </section>
+                <!-- END RESERVATIONS -->
             </main>
+            <!-- END MAIN -->
         </div>
     </body>
 </html>
