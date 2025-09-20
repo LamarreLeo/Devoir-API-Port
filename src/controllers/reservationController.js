@@ -32,11 +32,8 @@ const createReservation = async (req, res) => {
     const catwayNumber = Number(req.params.id);
 
     try {
-        const reservation = await reservationService.createReservation(
-            req.body,
-            catwayNumber
-        );
-        return res.status(201).json(reservation);
+        await reservationService.createReservation(req.body, catwayNumber);
+        return res.status(201).redirect("/reservations");
     } catch (error) {
         if (error.message === "Catway non trouvé") {
             return res.status(404).json({ message: error.message });
@@ -128,12 +125,12 @@ const updateReservation = async (req, res) => {
     const updatedFields = req.body;
 
     try {
-        const updatedReservation = await reservationService.updateReservation(
+        await reservationService.updateReservation(
             catwayNumber,
             reservationId,
             updatedFields
         );
-        return res.status(200).json(updatedReservation);
+        return res.status(200).redirect("/reservations");
     } catch (error) {
         if (error.message === "Réservation non trouvée") {
             return res.status(404).json({ message: error.message });
@@ -173,14 +170,8 @@ const deleteReservation = async (req, res) => {
     const reservationId = req.params.idReservation;
 
     try {
-        const deletedReservation = await reservationService.deleteReservation(
-            catwayNumber,
-            reservationId
-        );
-        return res.status(200).json({
-            message: "Réservation supprimée avec succès",
-            reservation: deletedReservation,
-        });
+        await reservationService.deleteReservation(catwayNumber, reservationId);
+        return res.status(200).redirect("/reservations");
     } catch (error) {
         if (error.message === "Réservation non trouvée") {
             return res.status(404).json({ message: error.message });
