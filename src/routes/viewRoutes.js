@@ -10,5 +10,6 @@ router.use(viewAuthMiddleware);
 
 router.get("/dashboard", indexController.renderDashboardPage);
 router.get("/catways", indexController.renderCatwaysPage);
+router.get("/reservations", indexController.renderReservationsPage);
 
 module.exports = router;

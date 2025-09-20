@@ -37,9 +37,27 @@ const renderCatwaysPage = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).send(
-            "Une erreur est survenue lors de la récupération des catways."
-        );
+        res.status(500).send({
+            title: "500 - Internal Server Error",
+            error: "Une erreur est survenue lors de la récupération des catways.",
+        });
+    }
+};
+
+const renderReservationsPage = async (req, res) => {
+    try {
+        const reservations = await Reservation.find().sort({ startDate: 1 });
+        res.render("reservations", {
+            title: "Reservations - API Port",
+            user: req.session.user,
+            reservations,
+        });
+    } catch (error) {
+        console.error("Error fetching reservations:", error);
+        res.status(500).render({
+            title: "500 - Internal Server Error",
+            error: "Une erreur est survenue lors de la récupération des réservations.",
+        });
     }
 };
 
@@ -48,4 +66,5 @@ module.exports = {
     renderUnauthorizedPage,
     renderDashboardPage,
     renderCatwaysPage,
+    renderReservationsPage,
 };
