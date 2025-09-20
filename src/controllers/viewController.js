@@ -1,5 +1,6 @@
 const Reservation = require("../models/reservationModel");
 const catwayService = require("../services/catwayService");
+const userService = require("../services/userService");
 
 const renderHomePage = (req, res) => {
     res.render("index", { title: "Accueil - API Port" });
@@ -61,10 +62,28 @@ const renderReservationsPage = async (req, res) => {
     }
 };
 
+const renderUsersPage = async (req, res) => {
+    try {
+        const users = await userService.getAllUsers();
+        res.render("users", {
+            title: "Users - API Port",
+            user: req.session.user,
+            users,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({
+            title: "500 - Internal Server Error",
+            error: "Une erreur est survenue lors de la récupération des utilisateurs.",
+        });
+    }
+};
+
 module.exports = {
     renderHomePage,
     renderUnauthorizedPage,
     renderDashboardPage,
     renderCatwaysPage,
     renderReservationsPage,
+    renderUsersPage,
 };
