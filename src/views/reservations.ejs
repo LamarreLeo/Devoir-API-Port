@@ -167,7 +167,7 @@
                         <!-- TABLE BODY -->
                         <tbody>
                             <% reservations.forEach(reservations => { %>
-                            <tr>
+                            <tr id="row-<%= reservations._id %>">
                                 <td class="border border-gray-900 p-2">
                                     <%= reservations.clientName %>
                                 </td>
@@ -230,6 +230,77 @@
                                     <!-- END SUPPR -->
                                 </td>
                             </tr>
+
+                            <!-- EDIT FORM -->
+                            <tr
+                                id="edit-<%= reservations._id %>"
+                                class="border border-gray-900 p-2 hidden"
+                            >
+                                <td colspan="6" class="p-2">
+                                    <form
+                                        action="/api/catways/<%= reservations.catwayNumber %>/reservations/<%= reservations._id %>?_method=PUT"
+                                        method="POST"
+                                        class="flex flex-col gap-2 items-center px-2"
+                                    >
+                                        <div class="flex gap-4">
+                                            <input
+                                                type="text"
+                                                name="clientName"
+                                                value="<%= reservations.clientName %>"
+                                                class="border border-gray-900 rounded py-1 px-2 text-center w-1/2"
+                                                placeholder="Nom du client"
+                                            />
+                                            <input
+                                                type="text"
+                                                name="boatName"
+                                                value="<%= reservations.boatName %>"
+                                                class="border border-gray-900 rounded py-1 px-2 text-center w-1/2"
+                                                placeholder="Nom du bateau"
+                                            />
+                                            <input
+                                                type="text"
+                                                name="catwayNumber"
+                                                value="<%= reservations.catwayNumber %>"
+                                                class="border border-gray-900 rounded py-1 px-2 text-center w-1/2"
+                                                placeholder="Numéro du catway"
+                                            />
+                                        </div>
+
+                                        <div class="flex gap-4">
+                                            <input
+                                                type="datetime-local"
+                                                name="startDate"
+                                                value="<%= reservations.startDate.toISOString().slice(0,16) %>"
+                                                class="border border-gray-900 rounded py-1 px-2 text-center w-1/2"
+                                                placeholder="Date de début"
+                                            />
+                                            <input
+                                                type="datetime-local"
+                                                name="endDate"
+                                                value="<%= reservations.endDate.toISOString().slice(0,16) %>"
+                                                class="border border-gray-900 rounded py-1 px-2 text-center w-1/2"
+                                                placeholder="Date de fin"
+                                            />
+                                        </div>
+                                        <div class="flex gap-4">
+                                            <button
+                                                type="submit"
+                                                class="text-green-500 hover:underline"
+                                            >
+                                                Valider
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onclick="hideEditForm('<%= reservations._id %>')"
+                                                class="text-red-500 hover:underline"
+                                            >
+                                                Annuler
+                                            </button>
+                                        </div>
+                                    </form>
+                                </td>
+                            </tr>
+                            <!-- END EDIT FORM -->
                             <% }) %>
                         </tbody>
                     </table>
@@ -250,6 +321,25 @@
                 addReservationForm.action = `/api/catways/${catwayNumber}/reservations`;
                 addReservationForm.submit();
             });
+
+            function showEditForm(
+                id,
+                clientName,
+                boatName,
+                catwayNumber,
+                startDate,
+                endDate
+            ) {
+                document
+                    .getElementById(`edit-${id}`)
+                    .classList.remove("hidden");
+                document.getElementById(`row-${id}`).classList.add("hidden");
+            }
+
+            function hideEditForm(id) {
+                document.getElementById(`edit-${id}`).classList.add("hidden");
+                document.getElementById(`row-${id}`).classList.remove("hidden");
+            }
         </script>
     </body>
 </html>
