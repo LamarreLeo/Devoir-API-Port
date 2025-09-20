@@ -70,7 +70,7 @@
                         Ajouter une réservation
                     </h2>
                     <form
-                        id="reservationForm"
+                        id="addReservationForm"
                         method="POST"
                         class="flex flex-col items-center gap-6 border border-gray-900 text-center rounded max-w-6xl mx-auto p-6"
                     >
@@ -157,6 +157,9 @@
                                 <th class="border border-gray-900 p-2 w-1/6">
                                     Fin
                                 </th>
+                                <th class="border border-gray-900 p-2 w-1/6">
+                                    Action
+                                </th>
                             </tr>
                         </thead>
                         <!-- END TABLE HEAD -->
@@ -200,6 +203,32 @@
                                     reservations.endDate.getHours().toString().padStart(2,
                                     "0") %>H
                                 </td>
+
+                                <td class="border border-gray-900 p-2">
+                                    <!-- MODIF -->
+                                    <button
+                                        onclick="showEditForm('<%= reservations._id %>', '<%= reservations.clientName %>', '<%= reservations.boatName %>', '<%= reservations.catwayNumber %>', '<%= reservations.startDate %>', '<%= reservations.endDate %>')"
+                                        class="text-blue-500 hover:underline"
+                                    >
+                                        Modifier
+                                    </button>
+                                    <!-- END MODIF -->
+
+                                    <!-- SUPPR -->
+                                    <form
+                                        action="/api/catways/<%= reservations.catwayNumber %>/reservations/<%= reservations._id %>?_method=DELETE"
+                                        method="POST"
+                                        onsubmit="return confirm('Voulez-vous vraiment supprimer cette réservation ?')"
+                                    >
+                                        <button
+                                            type="submit"
+                                            class="text-red-500 hover:text-red-600 hover:underline"
+                                        >
+                                            Supprimer
+                                        </button>
+                                    </form>
+                                    <!-- END SUPPR -->
+                                </td>
                             </tr>
                             <% }) %>
                         </tbody>
@@ -213,12 +242,13 @@
         </div>
 
         <script>
-            const form = document.getElementById("reservationForm");
-            form.addEventListener("submit", (e) => {
+            const addReservationForm =
+                document.getElementById("addReservationForm");
+            addReservationForm.addEventListener("submit", (e) => {
                 e.preventDefault();
-                const catwayNumber = form.catwayNumber.value;
-                form.action = `/api/catways/${catwayNumber}/reservations`;
-                form.submit();
+                const catwayNumber = addReservationForm.catwayNumber.value;
+                addReservationForm.action = `/api/catways/${catwayNumber}/reservations`;
+                addReservationForm.submit();
             });
         </script>
     </body>
