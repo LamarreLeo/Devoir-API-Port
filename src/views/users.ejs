@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title %></title>
+        <link rel="stylesheet" href="/css/style.css" />
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body>
+        <div class="flex flex-col md:flex-row gap-8 md:gap-0">
+            <!-- SIDEBAR -->
+            <aside
+                class="flex justify-center items-center h-[calc(100vh-8rem)] pt-12 bg-gray-200 border-r border-b border-gray-400 rounded-b-xl w-full md:h-screen md:w-64"
+            >
+                <nav aria-label="Navigation principale">
+                    <ul class="flex flex-col gap-4">
+                        <li class="p-2">
+                            <a
+                                class="hover:text-blue-500 hover:underline"
+                                href="/dashboard"
+                                >Dashboard</a
+                            >
+                        </li>
+                        <li class="p-2">
+                            <a
+                                class="hover:text-blue-500 hover:underline"
+                                href="/catways"
+                                >Catways</a
+                            >
+                        </li>
+                        <li class="p-2">
+                            <a
+                                class="hover:text-blue-500 hover:underline"
+                                href="/reservations"
+                                >Réservations</a
+                            >
+                        </li>
+                        <li class="bg-blue-500 text-white p-2 rounded">
+                            <a href="/users">Users</a>
+                        </li>
+                        <li class="p-2">
+                            <a
+                                class="hover:text-blue-500 hover:underline"
+                                href="#"
+                                >Documentation de l'API</a
+                            >
+                        </li>
+                        <li class="p-2">
+                            <a
+                                class="text-red-500 hover:text-red-600 hover:underline"
+                                href="/api/users/logout"
+                                >Se déconnecter</a
+                            >
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+            <!-- END SIDEBAR -->
+
+            <!-- MAIN -->
+            <main class="w-full flex flex-col justify-center gap-8">
+                <h1 class="flex justify-center text-4xl font-bold mt-12">
+                    Users
+                </h1>
+
+                <!-- ADD USER -->
+                <section class="flex flex-col gap-4 md:p-4">
+                    <h2 class="text-xl underline font-bold text-center">
+                        Ajouter un utilisateur
+                    </h2>
+                    <form
+                        action="/api/users/"
+                        method="POST"
+                        class="flex flex-col items-center gap-6 border border-gray-900 text-center rounded max-w-6xl mx-auto p-6"
+                    >
+                        <div class="grid grid-cols-2 gap-4 items-center">
+                            <label for="username">Nom d'utilisateur :</label>
+                            <input
+                                placeholder="Nom d'utilisateur"
+                                type="text"
+                                id="username"
+                                name="username"
+                                required
+                                class="border border-gray-900 p-2 rounded"
+                            />
+                            <label for="email">Email :</label>
+                            <input
+                                placeholder="Email"
+                                type="email"
+                                id="email"
+                                name="email"
+                                required
+                                class="border border-gray-900 p-2 rounded"
+                            />
+                            <label for="password">Mot de passe :</label>
+                            <input
+                                placeholder="Mot de passe"
+                                type="password"
+                                id="password"
+                                name="password"
+                                required
+                                class="border border-gray-900 p-2 rounded"
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            class="bg-blue-500 text-white p-2 px-6 rounded"
+                        >
+                            Ajouter
+                        </button>
+                    </form>
+                </section>
+                <!-- END ADD USER -->
+
+                <!-- USERS LIST -->
+                <section class="flex flex-col gap-4 md:p-4">
+                    <h2 class="text-xl underline font-bold text-center">
+                        Liste des utilisateurs
+                    </h2>
+
+                    <!-- USERS TABLE -->
+                    <% if (users.length === 0) { %>
+                    <p>Aucun utilisateur trouvé.</p>
+                    <% } else { %>
+                    <table
+                        class="border border-gray-900 text-center max-w-6xl mx-auto"
+                    >
+                        <!-- TABLE HEAD -->
+                        <thead class="border border-gray-900 p-2 bg-blue-200">
+                            <tr>
+                                <th class="border border-gray-900 p-2 w-1/6">
+                                    ID
+                                </th>
+                                <th class="border border-gray-900 p-2 w-1/6">
+                                    Nom d'utilisateur
+                                </th>
+                                <th class="border border-gray-900 p-2 w-1/6">
+                                    Email
+                                </th>
+                                <th class="border border-gray-900 p-2 w-1/6">
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <!-- END TABLE HEAD -->
+
+                        <!-- TABLE BODY -->
+                        <tbody>
+                            <% users.forEach(user => { %>
+                            <tr id="row-<%= user._id %>">
+                                <td class="border border-gray-900 p-2">
+                                    <%= user._id %>
+                                </td>
+
+                                <td class="border border-gray-900 p-2">
+                                    <%= user.username %>
+                                </td>
+
+                                <td class="border border-gray-900 p-2">
+                                    <%= user.email %>
+                                </td>
+
+                                <td class="border border-gray-900 p-2">
+                                    <!-- MODIF -->
+                                    <button
+                                        onclick="showEditForm('<%= user._id %>')"
+                                        class="text-blue-500 hover:underline"
+                                    >
+                                        Modifier
+                                    </button>
+                                    <!-- END MODIF -->
+
+                                    <!-- SUPPR -->
+                                    <form
+                                        action="/api/users/<%= user.email %>?_method=DELETE"
+                                        method="POST"
+                                        onsubmit="return confirm('Voulez-vous vraiment supprimer ce compte ?')"
+                                    >
+                                        <button
+                                            type="submit"
+                                            class="text-red-500 hover:text-red-600 hover:underline"
+                                        >
+                                            Supprimer
+                                        </button>
+                                    </form>
+                                    <!-- END SUPPR -->
+                                </td>
+                            </tr>
+
+                            <!-- EDIT FORM -->
+                            <tr
+                                id="edit-<%= user.id %>"
+                                class="border border-gray-900 p-2 hidden"
+                            >
+                                <td colspan="6" class="p-2">
+                                    <form
+                                        action="/api/users/<%= user.email %>?_method=PUT"
+                                        method="POST"
+                                        class="flex flex-col gap-2 items-center px-2"
+                                    >
+                                        <div class="flex gap-4">
+                                            <input
+                                                type="text"
+                                                name="username"
+                                                value="<%= user.username %>"
+                                                class="border border-gray-900 rounded py-1 px-2 text-center w-1/2"
+                                                placeholder="Nom d'utilisateur"
+                                            />
+                                            <input
+                                                type="text"
+                                                name="email"
+                                                value="<%= user.email %>"
+                                                class="border border-gray-900 rounded py-1 px-2 text-center w-1/2"
+                                                placeholder="Email"
+                                            />
+                                            <input
+                                                type="password"
+                                                name="password"
+                                                value="<%= user.password %>"
+                                                class="border border-gray-900 rounded py-1 px-2 text-center w-1/2"
+                                                placeholder="Mot de passe"
+                                            />
+                                        </div>
+
+                                        <div class="flex gap-4"></div>
+                                        <div class="flex gap-4">
+                                            <button
+                                                type="submit"
+                                                class="text-green-500 hover:underline"
+                                            >
+                                                Valider
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onclick="hideEditForm('<%= user._id %>')"
+                                                class="text-red-500 hover:underline"
+                                            >
+                                                Annuler
+                                            </button>
+                                        </div>
+                                    </form>
+                                </td>
+                            </tr>
+                            <!-- END EDIT FORM -->
+                            <% }) %>
+                        </tbody>
+                    </table>
+                    <% } %>
+                    <!-- END USERS TABLE -->
+                </section>
+                <!-- END USERS LIST -->
+            </main>
+            <!-- END MAIN -->
+        </div>
+
+        <script>
+            function showEditForm(userID) {
+                document
+                    .getElementById(`edit-${userID}`)
+                    .classList.remove("hidden");
+                document
+                    .getElementById(`row-${userID}`)
+                    .classList.add("hidden");
+            }
+
+            function hideEditForm(userID) {
+                document
+                    .getElementById(`edit-${userID}`)
+                    .classList.add("hidden");
+                document
+                    .getElementById(`row-${userID}`)
+                    .classList.remove("hidden");
+            }
+        </script>
+    </body>
+</html>
