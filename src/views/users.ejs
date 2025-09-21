@@ -29,15 +29,15 @@
                                 >Catways</a
                             >
                         </li>
-                        <li class="bg-blue-500 text-white p-2 rounded">
-                            <a href="/reservations">Réservations</a>
-                        </li>
                         <li class="p-2">
                             <a
                                 class="hover:text-blue-500 hover:underline"
-                                href="/users"
-                                >Users</a
+                                href="/reservations"
+                                >Réservations</a
                             >
+                        </li>
+                        <li class="bg-blue-500 text-white p-2 rounded">
+                            <a href="/users">Users</a>
                         </li>
                         <li class="p-2">
                             <a
@@ -61,80 +61,67 @@
             <!-- MAIN -->
             <main class="w-full flex flex-col justify-center gap-8">
                 <h1 class="flex justify-center text-4xl font-bold mt-12">
-                    Réservations
+                    Users
                 </h1>
 
-                <!-- RESERVATIONS ADD -->
+                <!-- ADD USER -->
                 <section class="flex flex-col gap-4 md:p-4">
                     <h2 class="text-xl underline font-bold text-center">
-                        Ajouter une réservation
+                        Ajouter un utilisateur
                     </h2>
                     <form
-                        id="addReservationForm"
+                        action="/api/users/"
                         method="POST"
                         class="flex flex-col items-center gap-6 border border-gray-900 text-center rounded max-w-6xl mx-auto p-6"
                     >
-                        <div class="grid grid-cols-2 gap-4">
-                            <label for="clientName">Nom du client :</label>
+                        <div class="grid grid-cols-2 gap-4 items-center">
+                            <label for="username">Nom d'utilisateur :</label>
                             <input
+                                placeholder="Nom d'utilisateur"
                                 type="text"
-                                id="clientName"
-                                name="clientName"
+                                id="username"
+                                name="username"
                                 required
                                 class="border border-gray-900 p-2 rounded"
                             />
-                            <label for="boatName">Nom du bateau :</label>
+                            <label for="email">Email :</label>
                             <input
-                                type="text"
-                                id="boatName"
-                                name="boatName"
+                                placeholder="Email"
+                                type="email"
+                                id="email"
+                                name="email"
                                 required
                                 class="border border-gray-900 p-2 rounded"
                             />
-                            <label for="catwayNumber">Numéro du catway :</label>
+                            <label for="password">Mot de passe :</label>
                             <input
-                                type="number"
-                                id="catwayNumber"
-                                name="catwayNumber"
-                                required
-                                class="border border-gray-900 p-2 rounded"
-                            />
-                            <label for="startDate">Date de début :</label>
-                            <input
-                                type="datetime-local"
-                                id="startDate"
-                                name="startDate"
-                                required
-                                class="border border-gray-900 p-2 rounded"
-                            />
-                            <label for="endDate">Date de fin :</label>
-                            <input
-                                type="datetime-local"
-                                id="endDate"
-                                name="endDate"
+                                placeholder="Mot de passe"
+                                type="password"
+                                id="password"
+                                name="password"
                                 required
                                 class="border border-gray-900 p-2 rounded"
                             />
                         </div>
                         <button
                             type="submit"
-                            class="bg-blue-500 text-white p-2 rounded"
+                            class="bg-blue-500 text-white p-2 px-6 rounded"
                         >
                             Ajouter
                         </button>
                     </form>
                 </section>
-                <!-- END RESERVATIONS ADD -->
+                <!-- END ADD USER -->
 
-                <!-- RESERVATIONS -->
+                <!-- USERS LIST -->
                 <section class="flex flex-col gap-4 md:p-4">
                     <h2 class="text-xl underline font-bold text-center">
-                        Réservations en cours
+                        Liste des utilisateurs
                     </h2>
 
-                    <!-- RESERVATIONS TABLE -->
-                    <% if (reservations.length === 0) { %>
-                    <p>Aucune réservation trouvée.</p>
+                    <!-- USERS TABLE -->
+                    <% if (users.length === 0) { %>
+                    <p>Aucun utilisateur trouvé.</p>
                     <% } else { %>
                     <table
                         class="border border-gray-900 text-center max-w-6xl mx-auto"
@@ -143,19 +130,13 @@
                         <thead class="border border-gray-900 p-2 bg-blue-200">
                             <tr>
                                 <th class="border border-gray-900 p-2 w-1/6">
-                                    Client
+                                    ID
                                 </th>
                                 <th class="border border-gray-900 p-2 w-1/6">
-                                    Bateau
+                                    Nom d'utilisateur
                                 </th>
                                 <th class="border border-gray-900 p-2 w-1/6">
-                                    Catway
-                                </th>
-                                <th class="border border-gray-900 p-2 w-1/6">
-                                    Debut
-                                </th>
-                                <th class="border border-gray-900 p-2 w-1/6">
-                                    Fin
+                                    Email
                                 </th>
                                 <th class="border border-gray-900 p-2 w-1/6">
                                     Action
@@ -166,48 +147,24 @@
 
                         <!-- TABLE BODY -->
                         <tbody>
-                            <% reservations.forEach(reservations => { %>
-                            <tr id="row-<%= reservations._id %>">
+                            <% users.forEach(user => { %>
+                            <tr id="row-<%= user._id %>">
                                 <td class="border border-gray-900 p-2">
-                                    <%= reservations.clientName %>
+                                    <%= user._id %>
                                 </td>
 
                                 <td class="border border-gray-900 p-2">
-                                    <%= reservations.boatName %>
+                                    <%= user.username %>
                                 </td>
 
                                 <td class="border border-gray-900 p-2">
-                                    <%= reservations.catwayNumber %>
-                                </td>
-
-                                <td class="border border-gray-900 p-2">
-                                    <%=
-                                    reservations.startDate.getDate().toString().padStart(2,
-                                    "0") %> / <%=
-                                    (reservations.startDate.getMonth() +
-                                    1).toString().padStart(2, "0") %> / <%=
-                                    reservations.startDate.getFullYear().toString().padStart(2,
-                                    "0") %> <%=
-                                    reservations.startDate.getHours().toString().padStart(2,
-                                    "0") %>H
-                                </td>
-
-                                <td class="border border-gray-900 p-2">
-                                    <%=
-                                    reservations.endDate.getDate().toString().padStart(2,
-                                    "0") %> / <%=
-                                    (reservations.endDate.getMonth() +
-                                    1).toString().padStart(2, "0") %> / <%=
-                                    reservations.endDate.getFullYear().toString().padStart(2,
-                                    "0") %> <%=
-                                    reservations.endDate.getHours().toString().padStart(2,
-                                    "0") %>H
+                                    <%= user.email %>
                                 </td>
 
                                 <td class="border border-gray-900 p-2">
                                     <!-- MODIF -->
                                     <button
-                                        onclick="showEditForm('<%= reservations._id %>', '<%= reservations.clientName %>', '<%= reservations.boatName %>', '<%= reservations.catwayNumber %>', '<%= reservations.startDate %>', '<%= reservations.endDate %>')"
+                                        onclick="showEditForm('<%= user._id %>')"
                                         class="text-blue-500 hover:underline"
                                     >
                                         Modifier
@@ -216,9 +173,9 @@
 
                                     <!-- SUPPR -->
                                     <form
-                                        action="/api/catways/<%= reservations.catwayNumber %>/reservations/<%= reservations._id %>?_method=DELETE"
+                                        action="/api/users/<%= user.email %>?_method=DELETE"
                                         method="POST"
-                                        onsubmit="return confirm('Voulez-vous vraiment supprimer cette réservation ?')"
+                                        onsubmit="return confirm('Voulez-vous vraiment supprimer ce compte ?')"
                                     >
                                         <button
                                             type="submit"
@@ -233,55 +190,40 @@
 
                             <!-- EDIT FORM -->
                             <tr
-                                id="edit-<%= reservations._id %>"
+                                id="edit-<%= user.id %>"
                                 class="border border-gray-900 p-2 hidden"
                             >
                                 <td colspan="6" class="p-2">
                                     <form
-                                        action="/api/catways/<%= reservations.catwayNumber %>/reservations/<%= reservations._id %>?_method=PUT"
+                                        action="/api/users/<%= user.email %>?_method=PUT"
                                         method="POST"
                                         class="flex flex-col gap-2 items-center px-2"
                                     >
                                         <div class="flex gap-4">
                                             <input
                                                 type="text"
-                                                name="clientName"
-                                                value="<%= reservations.clientName %>"
+                                                name="username"
+                                                value="<%= user.username %>"
                                                 class="border border-gray-900 rounded py-1 px-2 text-center w-1/2"
-                                                placeholder="Nom du client"
+                                                placeholder="Nom d'utilisateur"
                                             />
                                             <input
                                                 type="text"
-                                                name="boatName"
-                                                value="<%= reservations.boatName %>"
+                                                name="email"
+                                                value="<%= user.email %>"
                                                 class="border border-gray-900 rounded py-1 px-2 text-center w-1/2"
-                                                placeholder="Nom du bateau"
+                                                placeholder="Email"
                                             />
                                             <input
-                                                type="text"
-                                                name="catwayNumber"
-                                                value="<%= reservations.catwayNumber %>"
+                                                type="password"
+                                                name="password"
+                                                value="<%= user.password %>"
                                                 class="border border-gray-900 rounded py-1 px-2 text-center w-1/2"
-                                                placeholder="Numéro du catway"
+                                                placeholder="Mot de passe"
                                             />
                                         </div>
 
-                                        <div class="flex gap-4">
-                                            <input
-                                                type="datetime-local"
-                                                name="startDate"
-                                                value="<%= reservations.startDate.toISOString().slice(0,16) %>"
-                                                class="border border-gray-900 rounded py-1 px-2 text-center w-1/2"
-                                                placeholder="Date de début"
-                                            />
-                                            <input
-                                                type="datetime-local"
-                                                name="endDate"
-                                                value="<%= reservations.endDate.toISOString().slice(0,16) %>"
-                                                class="border border-gray-900 rounded py-1 px-2 text-center w-1/2"
-                                                placeholder="Date de fin"
-                                            />
-                                        </div>
+                                        <div class="flex gap-4"></div>
                                         <div class="flex gap-4">
                                             <button
                                                 type="submit"
@@ -291,7 +233,7 @@
                                             </button>
                                             <button
                                                 type="button"
-                                                onclick="hideEditForm('<%= reservations._id %>')"
+                                                onclick="hideEditForm('<%= user._id %>')"
                                                 class="text-red-500 hover:underline"
                                             >
                                                 Annuler
@@ -305,40 +247,30 @@
                         </tbody>
                     </table>
                     <% } %>
-                    <!-- END RESERVATIONS TABLE -->
+                    <!-- END USERS TABLE -->
                 </section>
-                <!-- END RESERVATIONS -->
+                <!-- END USERS LIST -->
             </main>
             <!-- END MAIN -->
         </div>
 
         <script>
-            const addReservationForm =
-                document.getElementById("addReservationForm");
-            addReservationForm.addEventListener("submit", (e) => {
-                e.preventDefault();
-                const catwayNumber = addReservationForm.catwayNumber.value;
-                addReservationForm.action = `/api/catways/${catwayNumber}/reservations`;
-                addReservationForm.submit();
-            });
-
-            function showEditForm(
-                id,
-                clientName,
-                boatName,
-                catwayNumber,
-                startDate,
-                endDate
-            ) {
+            function showEditForm(userID) {
                 document
-                    .getElementById(`edit-${id}`)
+                    .getElementById(`edit-${userID}`)
                     .classList.remove("hidden");
-                document.getElementById(`row-${id}`).classList.add("hidden");
+                document
+                    .getElementById(`row-${userID}`)
+                    .classList.add("hidden");
             }
 
-            function hideEditForm(id) {
-                document.getElementById(`edit-${id}`).classList.add("hidden");
-                document.getElementById(`row-${id}`).classList.remove("hidden");
+            function hideEditForm(userID) {
+                document
+                    .getElementById(`edit-${userID}`)
+                    .classList.add("hidden");
+                document
+                    .getElementById(`row-${userID}`)
+                    .classList.remove("hidden");
             }
         </script>
     </body>
