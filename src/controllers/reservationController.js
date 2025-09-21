@@ -1,5 +1,6 @@
 /**
  * Contrôleur pour la gestion des réservations de catways.
+ * Fournit des méthodes pour créer, récupérer, mettre à jour et supprimer des réservations.
  * @module controllers/reservationController
  * @requires express-validator
  * @requires ../services/reservationService
@@ -21,7 +22,11 @@ const reservationService = require("../services/reservationService");
  * @param {string} req.body.startDate - La date de début de la réservation (format ISO).
  * @param {string} req.body.endDate - La date de fin de la réservation (format ISO).
  * @param {Object} res - La réponse Express.
- * @returns {Promise<Object>} Réponse JSON avec la réservation créée ou un message d'erreur.
+ * @returns {Promise<Object>} Redirection vers la page des réservations ou message d'erreur.
+ * @throws {Error} 400 - Si la validation des données échoue.
+ * @throws {Error} 404 - Si le catway n'est pas trouvé.
+ * @throws {Error} 409 - Si le catway est déjà réservé sur cette période.
+ * @throws {Error} 500 - En cas d'erreur serveur.
  */
 const createReservation = async (req, res) => {
     const errors = validationResult(req);
@@ -52,6 +57,7 @@ const createReservation = async (req, res) => {
  * @param {Object} req - La requête Express.
  * @param {Object} res - La réponse Express.
  * @returns {Promise<Object>} Réponse JSON avec la liste des réservations ou un message d'erreur.
+ * @throws {Error} 500 - En cas d'erreur serveur lors de la récupération des réservations.
  */
 const getAllReservations = async (req, res) => {
     try {
@@ -73,6 +79,9 @@ const getAllReservations = async (req, res) => {
  * @param {string} req.params.idReservation - L'ID de la réservation.
  * @param {Object} res - La réponse Express.
  * @returns {Promise<Object>} Réponse JSON avec la réservation ou un message d'erreur.
+ * @throws {Error} 400 - Si la validation des paramètres échoue.
+ * @throws {Error} 404 - Si la réservation n'est pas trouvée.
+ * @throws {Error} 500 - En cas d'erreur serveur.
  */
 const getReservationById = async (req, res) => {
     const errors = validationResult(req);
@@ -113,6 +122,10 @@ const getReservationById = async (req, res) => {
  * @param {string} [req.body.endDate] - La nouvelle date de fin (optionnel, format ISO).
  * @param {Object} res - La réponse Express.
  * @returns {Promise<Object>} Réponse JSON avec la réservation mise à jour ou un message d'erreur.
+ * @throws {Error} 400 - Si la validation des données échoue.
+ * @throws {Error} 404 - Si la réservation n'est pas trouvée.
+ * @throws {Error} 409 - Si les dates de réservation sont en conflit.
+ * @throws {Error} 500 - En cas d'erreur serveur.
  */
 const updateReservation = async (req, res) => {
     const errors = validationResult(req);
@@ -159,6 +172,9 @@ const updateReservation = async (req, res) => {
  * @param {string} req.params.idReservation - L'ID de la réservation à supprimer.
  * @param {Object} res - La réponse Express.
  * @returns {Promise<Object>} Réponse JSON avec un message de succès ou d'erreur.
+ * @throws {Error} 400 - Si la validation des paramètres échoue.
+ * @throws {Error} 404 - Si la réservation n'est pas trouvée.
+ * @throws {Error} 500 - En cas d'erreur serveur.
  */
 const deleteReservation = async (req, res) => {
     const errors = validationResult(req);
