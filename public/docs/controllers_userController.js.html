@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/userController.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/userController.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Contrôleur pour la gestion des utilisateurs.
+ * Fournit des méthodes pour créer, récupérer, mettre à jour et supprimer des utilisateurs,
+ * ainsi que pour gérer l'authentification.
+ * @module controllers/userController
+ * @requires express-validator
+ * @requires ../services/userService
+ */
+
+const { validationResult } = require("express-validator");
+const userService = require("../services/userService");
+
+/**
+ * Crée un nouvel utilisateur.
+ * @async
+ * @function createUser
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.body - Le corps de la requête.
+ * @param {string} req.body.username - Le nom d'utilisateur.
+ * @param {string} req.body.email - L'email de l'utilisateur.
+ * @param {string} req.body.password - Le mot de passe en clair.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise&lt;Object>} Réponse JSON avec l'utilisateur créé ou un message d'erreur.
+ */
+const createUser = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const userData = req.body;
+        await userService.createUser(userData);
+        return res.status(201).redirect("/users");
+    } catch (err) {
+        console.error(err);
+        if (err.statusCode === 409) {
+            return res.status(409).json({ message: err.message });
+        }
+        return res
+            .status(500)
+            .json({ message: "Erreur lors de la création de l'utilisateur" });
+    }
+};
+
+/**
+ * Récupère tous les utilisateurs.
+ * @async
+ * @function getAllUsers
+ * @param {Object} req - La requête Express.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise&lt;Object>} Réponse JSON avec la liste des utilisateurs ou un message d'erreur.
+ * @throws {Error} 500 - Si une erreur survient lors de la récupération des utilisateurs.
+ */
+const getAllUsers = async (req, res) => {
+    try {
+        const userData = await userService.getAllUsers();
+        return res.status(200).json(userData);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            message: "Erreur lors de la récupération des utilisateurs",
+        });
+    }
+};
+
+/**
+ * Récupère un utilisateur par son email.
+ * @async
+ * @function getUserByEmail
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.params - Les paramètres de la requête.
+ * @param {string} req.params.email - L'email de l'utilisateur à récupérer.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise&lt;Object>} Réponse JSON avec l'utilisateur ou un message d'erreur.
+ * @throws {Error} 400 - Si l'email n'est pas fourni ou est invalide.
+ * @throws {Error} 404 - Si aucun utilisateur n'est trouvé avec cet email.
+ * @throws {Error} 500 - En cas d'erreur serveur.
+ */
+const getUserByEmail = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const email = req.params.email;
+        const userData = await userService.getUserByEmail(email);
+        if (!userData) {
+            return res.status(404).json({ message: "Utilisateur non trouvé" });
+        }
+
+        return res.status(200).json(userData);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            message: "Erreur lors de la récupération de l'utilisateur",
+        });
+    }
+};
+
+/**
+ * Met à jour un utilisateur existant.
+ * @async
+ * @function updateUser
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.params - Les paramètres de la requête.
+ * @param {string} req.params.email - L'email de l'utilisateur à mettre à jour.
+ * @param {Object} req.body - Les données à mettre à jour.
+ * @param {string} [req.body.username] - Le nouveau nom d'utilisateur (optionnel).
+ * @param {string} [req.body.email] - Le nouvel email (optionnel).
+ * @param {string} [req.body.password] - Le nouveau mot de passe (optionnel).
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise&lt;Object>} Réponse JSON avec l'utilisateur mis à jour ou un message d'erreur.
+ * @throws {Error} 400 - Si les données fournies sont invalides.
+ * @throws {Error} 403 - Si l'utilisateur n'est pas autorisé à modifier ce compte.
+ * @throws {Error} 404 - Si l'utilisateur n'est pas trouvé.
+ * @throws {Error} 500 - En cas d'erreur serveur.
+ */
+const updateUser = async (req, res) => {
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+        return res.status(400).json({ errors: error.array() });
+    }
+
+    try {
+        const email = req.params.email;
+        const updateData = req.body;
+        await userService.updateUser(email, updateData);
+        return res.status(200).redirect("/users");
+    } catch (err) {
+        if (err.statusCode === 404) {
+            return res.status(404).json({ message: err.message });
+        } else if (err.statusCode === 409) {
+            return res.status(409).json({ message: err.message });
+        }
+        return res.status(500).json({
+            message: "Erreur lors de la mise à jour de l'utilisateur",
+        });
+    }
+};
+
+/**
+ * Supprime un utilisateur par son email.
+ * @async
+ * @function deleteUser
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.params - Les paramètres de la requête.
+ * @param {string} req.params.email - L'email de l'utilisateur à supprimer.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise&lt;Object>} Réponse JSON avec un message de succès ou d'erreur.
+ * @throws {Error} 400 - Si l'email n'est pas fourni ou est invalide.
+ * @throws {Error} 403 - Si l'utilisateur n'est pas autorisé à supprimer ce compte.
+ * @throws {Error} 404 - Si l'utilisateur n'est pas trouvé.
+ * @throws {Error} 500 - En cas d'erreur serveur.
+ */
+const deleteUser = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const email = req.params.email;
+        const deletedUser = await userService.deleteUser(email);
+        if (!deletedUser) {
+            return res.status(404).json({ message: "Utilisateur non trouvé" });
+        }
+
+        return res.status(200).redirect("/users");
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            message: "Erreur lors de la suppression de l'utilisateur",
+        });
+    }
+};
+
+/**
+ * Authentifie un utilisateur.
+ * @async
+ * @function userLogin
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.body - Le corps de la requête.
+ * @param {string} req.body.email - L'email de l'utilisateur.
+ * @param {string} req.body.password - Le mot de passe en clair.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise&lt;Object>} Réponse JSON avec l'utilisateur authentifié ou un message d'erreur.
+ * @throws {Error} 400 - Si l'email ou le mot de passe est manquant.
+ * @throws {Error} 401 - Si les identifiants sont incorrects.
+ * @throws {Error} 500 - En cas d'erreur serveur lors de l'authentification.
+ */
+const userLogin = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { email, password } = req.body;
+    try {
+        const user = await userService.userLogin(email, password);
+        req.session.user = user;
+
+        return res.status(200), res.redirect("/dashboard");
+    } catch (err) {
+        if (err.message === "Email ou mot de passe incorrect") {
+            return res.status(401).json({ message: err.message });
+        }
+        console.error(err);
+        return res.status(500).json({
+            message: "Erreur lors de la connexion",
+        });
+    }
+};
+
+/**
+ * Déconnecte un utilisateur.
+ * Détruit la session de l'utilisateur et supprime le cookie de session.
+ * @async
+ * @function userLogout
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.session - La session de l'utilisateur.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise&lt;Object>} Réponse JSON avec un message de succès ou d'erreur.
+ * @throws {Error} 500 - En cas d'erreur lors de la déconnexion.
+ */
+const userLogout = async (req, res) => {
+    try {
+        if (req.session.user) {
+            req.session.destroy((err) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({
+                        message: "Erreur lors de la déconnexion",
+                    });
+                }
+                res.clearCookie("connect.sid");
+                return res.status(200), res.redirect("/");
+            });
+        } else {
+            return res
+                .status(400)
+                .json({ message: "Utilisateur non connecté" });
+        }
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            message: "Erreur lors de la déconnexion",
+        });
+    }
+};
+
+module.exports = {
+    createUser,
+    getAllUsers,
+    getUserByEmail,
+    updateUser,
+    deleteUser,
+    userLogin,
+    userLogout,
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-config_db.html">config/db</a></li><li><a href="module-controllers_catwayController.html">controllers/catwayController</a></li><li><a href="module-controllers_reservationController.html">controllers/reservationController</a></li><li><a href="module-controllers_userController.html">controllers/userController</a></li><li><a href="module-controllers_viewController.html">controllers/viewController</a></li><li><a href="module-middlewares_sessionMiddleware.html">middlewares/sessionMiddleware</a></li><li><a href="module-middlewares_viewAuthMiddleware.html">middlewares/viewAuthMiddleware</a></li><li><a href="module-models_catwayModel.html">models/catwayModel</a></li><li><a href="module-models_reservationModel.html">models/reservationModel</a></li><li><a href="module-models_userModel.html">models/userModel</a></li><li><a href="module-routes_catwayRoutes.html">routes/catwayRoutes</a></li><li><a href="module-routes_reservationRoutes.html">routes/reservationRoutes</a></li><li><a href="module-routes_userRoutes.html">routes/userRoutes</a></li><li><a href="module-routes_viewRoutes.html">routes/viewRoutes</a></li><li><a href="module-utils_password.html">utils/password</a></li></ul><h3>Classes</h3><ul><li><a href="module-models_catwayModel-CatwaySchema.html">CatwaySchema</a></li><li><a href="module-models_reservationModel-ReservationSchema.html">ReservationSchema</a></li><li><a href="module-models_userModel-UserSchema.html">UserSchema</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Sep 21 2025 21:18:36 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
