@@ -1,5 +1,7 @@
 /**
  * Contrôleur pour la gestion des utilisateurs.
+ * Fournit des méthodes pour créer, récupérer, mettre à jour et supprimer des utilisateurs,
+ * ainsi que pour gérer l'authentification.
  * @module controllers/userController
  * @requires express-validator
  * @requires ../services/userService
@@ -48,6 +50,7 @@ const createUser = async (req, res) => {
  * @param {Object} req - La requête Express.
  * @param {Object} res - La réponse Express.
  * @returns {Promise<Object>} Réponse JSON avec la liste des utilisateurs ou un message d'erreur.
+ * @throws {Error} 500 - Si une erreur survient lors de la récupération des utilisateurs.
  */
 const getAllUsers = async (req, res) => {
     try {
@@ -70,6 +73,9 @@ const getAllUsers = async (req, res) => {
  * @param {string} req.params.email - L'email de l'utilisateur à récupérer.
  * @param {Object} res - La réponse Express.
  * @returns {Promise<Object>} Réponse JSON avec l'utilisateur ou un message d'erreur.
+ * @throws {Error} 400 - Si l'email n'est pas fourni ou est invalide.
+ * @throws {Error} 404 - Si aucun utilisateur n'est trouvé avec cet email.
+ * @throws {Error} 500 - En cas d'erreur serveur.
  */
 const getUserByEmail = async (req, res) => {
     const errors = validationResult(req);
@@ -106,6 +112,10 @@ const getUserByEmail = async (req, res) => {
  * @param {string} [req.body.password] - Le nouveau mot de passe (optionnel).
  * @param {Object} res - La réponse Express.
  * @returns {Promise<Object>} Réponse JSON avec l'utilisateur mis à jour ou un message d'erreur.
+ * @throws {Error} 400 - Si les données fournies sont invalides.
+ * @throws {Error} 403 - Si l'utilisateur n'est pas autorisé à modifier ce compte.
+ * @throws {Error} 404 - Si l'utilisateur n'est pas trouvé.
+ * @throws {Error} 500 - En cas d'erreur serveur.
  */
 const updateUser = async (req, res) => {
     const error = validationResult(req);
@@ -138,7 +148,11 @@ const updateUser = async (req, res) => {
  * @param {Object} req.params - Les paramètres de la requête.
  * @param {string} req.params.email - L'email de l'utilisateur à supprimer.
  * @param {Object} res - La réponse Express.
- * @returns {Promise<Object>} Réponse JSON avec l'utilisateur supprimé ou un message d'erreur.
+ * @returns {Promise<Object>} Réponse JSON avec un message de succès ou d'erreur.
+ * @throws {Error} 400 - Si l'email n'est pas fourni ou est invalide.
+ * @throws {Error} 403 - Si l'utilisateur n'est pas autorisé à supprimer ce compte.
+ * @throws {Error} 404 - Si l'utilisateur n'est pas trouvé.
+ * @throws {Error} 500 - En cas d'erreur serveur.
  */
 const deleteUser = async (req, res) => {
     const errors = validationResult(req);
@@ -172,6 +186,9 @@ const deleteUser = async (req, res) => {
  * @param {string} req.body.password - Le mot de passe en clair.
  * @param {Object} res - La réponse Express.
  * @returns {Promise<Object>} Réponse JSON avec l'utilisateur authentifié ou un message d'erreur.
+ * @throws {Error} 400 - Si l'email ou le mot de passe est manquant.
+ * @throws {Error} 401 - Si les identifiants sont incorrects.
+ * @throws {Error} 500 - En cas d'erreur serveur lors de l'authentification.
  */
 const userLogin = async (req, res) => {
     const errors = validationResult(req);
@@ -198,11 +215,14 @@ const userLogin = async (req, res) => {
 
 /**
  * Déconnecte un utilisateur.
+ * Détruit la session de l'utilisateur et supprime le cookie de session.
  * @async
  * @function userLogout
  * @param {Object} req - La requête Express.
+ * @param {Object} req.session - La session de l'utilisateur.
  * @param {Object} res - La réponse Express.
  * @returns {Promise<Object>} Réponse JSON avec un message de succès ou d'erreur.
+ * @throws {Error} 500 - En cas d'erreur lors de la déconnexion.
  */
 const userLogout = async (req, res) => {
     try {

@@ -1,15 +1,47 @@
+/**
+ * Contrôleur pour la gestion des vues de l'application web.
+ * @module controllers/viewController
+ * @requires ../models/reservationModel
+ * @requires ../services/catwayService
+ * @requires ../services/userService
+ */
+
 const Reservation = require("../models/reservationModel");
 const catwayService = require("../services/catwayService");
 const userService = require("../services/userService");
 
+/**
+ * Affiche la page d'accueil.
+ * @function renderHomePage
+ * @param {Object} req - La requête Express.
+ * @param {Object} res - La réponse Express.
+ * @returns {void}
+ */
 const renderHomePage = (req, res) => {
     res.render("index", { title: "Accueil - API Port" });
 };
 
+/**
+ * Affiche la page d'erreur 401 (Non autorisé).
+ * @function renderUnauthorizedPage
+ * @param {Object} req - La requête Express.
+ * @param {Object} res - La réponse Express.
+ * @returns {void}
+ */
 const renderUnauthorizedPage = (req, res) => {
     res.render("unauthorized", { title: "401 - Unauthorized" });
 };
 
+/**
+ * Affiche le tableau de bord avec la liste des réservations.
+ * @async
+ * @function renderDashboardPage
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.session - La session utilisateur.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise<void>}
+ * @throws {Error} Si une erreur survient lors de la récupération des réservations.
+ */
 const renderDashboardPage = async (req, res) => {
     try {
         const reservations = await Reservation.find().sort({ startDate: 1 });
@@ -28,6 +60,16 @@ const renderDashboardPage = async (req, res) => {
     }
 };
 
+/**
+ * Affiche la page des catways disponibles.
+ * @async
+ * @function renderCatwaysPage
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.session - La session utilisateur.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise<void>}
+ * @throws {Error} Si une erreur survient lors de la récupération des catways.
+ */
 const renderCatwaysPage = async (req, res) => {
     try {
         const catways = await catwayService.getAllCatways();
@@ -45,6 +87,16 @@ const renderCatwaysPage = async (req, res) => {
     }
 };
 
+/**
+ * Affiche la page des réservations.
+ * @async
+ * @function renderReservationsPage
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.session - La session utilisateur.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise<void>}
+ * @throws {Error} Si une erreur survient lors de la récupération des réservations.
+ */
 const renderReservationsPage = async (req, res) => {
     try {
         const reservations = await Reservation.find().sort({ startDate: 1 });
@@ -62,6 +114,16 @@ const renderReservationsPage = async (req, res) => {
     }
 };
 
+/**
+ * Affiche la page de gestion des utilisateurs (réservée aux administrateurs).
+ * @async
+ * @function renderUsersPage
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.session - La session utilisateur.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise<void>}
+ * @throws {Error} Si une erreur survient lors de la récupération des utilisateurs.
+ */
 const renderUsersPage = async (req, res) => {
     try {
         const users = await userService.getAllUsers();
