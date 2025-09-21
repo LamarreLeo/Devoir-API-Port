@@ -28,8 +28,8 @@ const createUser = async (req, res) => {
 
     try {
         const userData = req.body;
-        const newUser = await userService.createUser(userData);
-        return res.status(201).json(newUser);
+        await userService.createUser(userData);
+        return res.status(201).redirect("/users");
     } catch (err) {
         console.error(err);
         if (err.statusCode === 409) {
@@ -116,8 +116,8 @@ const updateUser = async (req, res) => {
     try {
         const email = req.params.email;
         const updateData = req.body;
-        const updatedUser = await userService.updateUser(email, updateData);
-        return res.status(200).json(updatedUser);
+        await userService.updateUser(email, updateData);
+        return res.status(200).redirect("/users");
     } catch (err) {
         if (err.statusCode === 404) {
             return res.status(404).json({ message: err.message });
@@ -153,7 +153,7 @@ const deleteUser = async (req, res) => {
             return res.status(404).json({ message: "Utilisateur non trouvé" });
         }
 
-        return res.status(200).json(deletedUser);
+        return res.status(200).redirect("/users");
     } catch (err) {
         console.error(err);
         return res.status(500).json({
