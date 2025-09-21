@@ -29,6 +29,10 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static("public"));
 
+app.get("/doc", (req, res) => {
+    res.redirect("/docs/index.html");
+});
+
 app.use("/", indexRoutes);
 
 const HOST = process.env.HOST || "localhost";

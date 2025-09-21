@@ -1,0 +1,10 @@
+{
+    "source": {
+        "include": ["src/config", "src/controllers", "src/models", "src/routes", "src/utils", "src/middlewares"],
+        "includePattern": ".js"
+    },
+    "opts": {
+        "destination": "public/docs",
+        "recurse": true
+    }
+}

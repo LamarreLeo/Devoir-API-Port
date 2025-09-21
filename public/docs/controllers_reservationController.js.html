@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/reservationController.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/reservationController.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Contrôleur pour la gestion des réservations de catways.
+ * Fournit des méthodes pour créer, récupérer, mettre à jour et supprimer des réservations.
+ * @module controllers/reservationController
+ * @requires express-validator
+ * @requires ../services/reservationService
+ */
+
+const { validationResult } = require("express-validator");
+const reservationService = require("../services/reservationService");
+
+/**
+ * Crée une nouvelle réservation pour un catway.
+ * @async
+ * @function createReservation
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.params - Les paramètres de la requête.
+ * @param {string} req.params.id - L'ID du catway.
+ * @param {Object} req.body - Le corps de la requête contenant les données de la réservation.
+ * @param {string} req.body.clientName - Le nom du client.
+ * @param {string} req.body.boatName - Le nom du bateau.
+ * @param {string} req.body.startDate - La date de début de la réservation (format ISO).
+ * @param {string} req.body.endDate - La date de fin de la réservation (format ISO).
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise&lt;Object>} Redirection vers la page des réservations ou message d'erreur.
+ * @throws {Error} 400 - Si la validation des données échoue.
+ * @throws {Error} 404 - Si le catway n'est pas trouvé.
+ * @throws {Error} 409 - Si le catway est déjà réservé sur cette période.
+ * @throws {Error} 500 - En cas d'erreur serveur.
+ */
+const createReservation = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const catwayNumber = Number(req.params.id);
+
+    try {
+        await reservationService.createReservation(req.body, catwayNumber);
+        return res.status(201).redirect("/reservations");
+    } catch (error) {
+        if (error.message === "Catway non trouvé") {
+            return res.status(404).json({ message: error.message });
+        }
+        if (error.message === "Ce catway est déjà réservé sur ces dates") {
+            return res.status(409).json({ message: error.message });
+        }
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+/**
+ * Récupère toutes les réservations.
+ * @async
+ * @function getAllReservations
+ * @param {Object} req - La requête Express.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise&lt;Object>} Réponse JSON avec la liste des réservations ou un message d'erreur.
+ * @throws {Error} 500 - En cas d'erreur serveur lors de la récupération des réservations.
+ */
+const getAllReservations = async (req, res) => {
+    try {
+        const reservations = await reservationService.getAllReservations();
+        return res.status(200).json(reservations);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+/**
+ * Récupère une réservation par son ID et le numéro de catway.
+ * @async
+ * @function getReservationById
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.params - Les paramètres de la requête.
+ * @param {string} req.params.id - Le numéro du catway.
+ * @param {string} req.params.idReservation - L'ID de la réservation.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise&lt;Object>} Réponse JSON avec la réservation ou un message d'erreur.
+ * @throws {Error} 400 - Si la validation des paramètres échoue.
+ * @throws {Error} 404 - Si la réservation n'est pas trouvée.
+ * @throws {Error} 500 - En cas d'erreur serveur.
+ */
+const getReservationById = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const catwayNumber = Number(req.params.id);
+    const reservationId = req.params.idReservation;
+
+    try {
+        const reservation = await reservationService.getReservationById(
+            catwayNumber,
+            reservationId
+        );
+        return res.status(200).json(reservation);
+    } catch (error) {
+        if (error.message === "Réservation non trouvée") {
+            return res.status(404).json({ message: error.message });
+        }
+        console.error(error);
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+/**
+ * Met à jour une réservation existante.
+ * @async
+ * @function updateReservation
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.params - Les paramètres de la requête.
+ * @param {string} req.params.id - Le numéro du catway.
+ * @param {string} req.params.idReservation - L'ID de la réservation à mettre à jour.
+ * @param {Object} req.body - Les champs à mettre à jour.
+ * @param {string} [req.body.clientName] - Le nouveau nom du client (optionnel).
+ * @param {string} [req.body.boatName] - Le nouveau nom du bateau (optionnel).
+ * @param {string} [req.body.startDate] - La nouvelle date de début (optionnel, format ISO).
+ * @param {string} [req.body.endDate] - La nouvelle date de fin (optionnel, format ISO).
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise&lt;Object>} Réponse JSON avec la réservation mise à jour ou un message d'erreur.
+ * @throws {Error} 400 - Si la validation des données échoue.
+ * @throws {Error} 404 - Si la réservation n'est pas trouvée.
+ * @throws {Error} 409 - Si les dates de réservation sont en conflit.
+ * @throws {Error} 500 - En cas d'erreur serveur.
+ */
+const updateReservation = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const catwayNumber = Number(req.params.id);
+    const reservationId = req.params.idReservation;
+    const updatedFields = req.body;
+
+    try {
+        await reservationService.updateReservation(
+            catwayNumber,
+            reservationId,
+            updatedFields
+        );
+        return res.status(200).redirect("/reservations");
+    } catch (error) {
+        if (error.message === "Réservation non trouvée") {
+            return res.status(404).json({ message: error.message });
+        }
+        if (error.message === "Ce catway est déjà réservé sur ces dates") {
+            return res.status(409).json({ message: error.message });
+        }
+        if (
+            error.message ===
+            "La date de fin doit être supérieure à la date de début"
+        ) {
+            return res.status(400).json({ message: error.message });
+        }
+        console.error(error);
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+/**
+ * Supprime une réservation.
+ * @async
+ * @function deleteReservation
+ * @param {Object} req - La requête Express.
+ * @param {Object} req.params - Les paramètres de la requête.
+ * @param {string} req.params.id - Le numéro du catway.
+ * @param {string} req.params.idReservation - L'ID de la réservation à supprimer.
+ * @param {Object} res - La réponse Express.
+ * @returns {Promise&lt;Object>} Réponse JSON avec un message de succès ou d'erreur.
+ * @throws {Error} 400 - Si la validation des paramètres échoue.
+ * @throws {Error} 404 - Si la réservation n'est pas trouvée.
+ * @throws {Error} 500 - En cas d'erreur serveur.
+ */
+const deleteReservation = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const catwayNumber = Number(req.params.id);
+    const reservationId = req.params.idReservation;
+
+    try {
+        await reservationService.deleteReservation(catwayNumber, reservationId);
+        return res.status(200).redirect("/reservations");
+    } catch (error) {
+        if (error.message === "Réservation non trouvée") {
+            return res.status(404).json({ message: error.message });
+        }
+        console.error(error);
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = {
+    createReservation,
+    getAllReservations,
+    getReservationById,
+    updateReservation,
+    deleteReservation,
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-config_db.html">config/db</a></li><li><a href="module-controllers_catwayController.html">controllers/catwayController</a></li><li><a href="module-controllers_reservationController.html">controllers/reservationController</a></li><li><a href="module-controllers_userController.html">controllers/userController</a></li><li><a href="module-controllers_viewController.html">controllers/viewController</a></li><li><a href="module-middlewares_sessionMiddleware.html">middlewares/sessionMiddleware</a></li><li><a href="module-middlewares_viewAuthMiddleware.html">middlewares/viewAuthMiddleware</a></li><li><a href="module-models_catwayModel.html">models/catwayModel</a></li><li><a href="module-models_reservationModel.html">models/reservationModel</a></li><li><a href="module-models_userModel.html">models/userModel</a></li><li><a href="module-routes_catwayRoutes.html">routes/catwayRoutes</a></li><li><a href="module-routes_reservationRoutes.html">routes/reservationRoutes</a></li><li><a href="module-routes_userRoutes.html">routes/userRoutes</a></li><li><a href="module-routes_viewRoutes.html">routes/viewRoutes</a></li><li><a href="module-utils_password.html">utils/password</a></li></ul><h3>Classes</h3><ul><li><a href="module-models_catwayModel-CatwaySchema.html">CatwaySchema</a></li><li><a href="module-models_reservationModel-ReservationSchema.html">ReservationSchema</a></li><li><a href="module-models_userModel-UserSchema.html">UserSchema</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Sep 21 2025 21:18:36 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
